@@ -12,6 +12,7 @@
     }
   },
   "scripts": {
+    "publish": "php bin/publish.php",
     "git:push": "git add . && git commit -m \"Update components\" && git push origin HEAD",
     "git:pull": "git pull origin main"
   },

@@ -38,7 +38,7 @@ class WatchEvents
       )
     );
 
-    foreach ( $recursiveIteratorIterators as $item ) {
+    foreach ($recursiveIteratorIterators as $item) {
       if ($item->isFile() === true) {
         $filesResults->add(
           $item->getPathname(),

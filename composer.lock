@@ -1,0 +1,107 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "9b9607958c438771c4b5bb3818a4cc39",
+    "packages": [
+        {
+            "name": "websyspro/commons",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/websyspro/commons.git",
+                "reference": "34ac99505c6c26b9457af83d03ac5e90bf7ba155"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/websyspro/commons/zipball/34ac99505c6c26b9457af83d03ac5e90bf7ba155",
+                "reference": "34ac99505c6c26b9457af83d03ac5e90bf7ba155",
+                "shasum": ""
+            },
+            "default-branch": true,
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Websyspro\\Commons\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "websyspro",
+                    "email": "websyspro.services@gmail.com"
+                }
+            ],
+            "description": "Generic utility helpers for PHP components (arrays, files, strings, types, and identifiers).",
+            "support": {
+                "issues": "https://github.com/websyspro/commons/issues",
+                "source": "https://github.com/websyspro/commons/tree/main"
+            },
+            "time": "2026-03-28T15:58:17+00:00"
+        },
+        {
+            "name": "websyspro/devtools",
+            "version": "dev-main",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/websyspro/dev-tools.git",
+                "reference": "d4be6d2fa75a2556e821f3d97f9fc0eb779d0107"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/websyspro/dev-tools/zipball/d4be6d2fa75a2556e821f3d97f9fc0eb779d0107",
+                "reference": "d4be6d2fa75a2556e821f3d97f9fc0eb779d0107",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1",
+                "websyspro/commons": "dev-main",
+                "websyspro/elements": "dev-main"
+            },
+            "default-branch": true,
+            "bin": [
+                "bin/watch",
+                "bin/reload"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Websyspro\\DevTools\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "websyspro",
+                    "email": "websyspro.services@gmail.com"
+                }
+            ],
+            "description": "A lightweight PHP development utility that watches source directories for file changes and automatically re-executes a target PHP entry point.",
+            "support": {
+                "issues": "https://github.com/websyspro/dev-tools/issues",
+                "source": "https://github.com/websyspro/dev-tools/tree/main"
+            },
+            "time": "2026-01-23T23:55:03+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "websyspro/commons": 20,
+        "websyspro/devtools": 20
+    },
+    "prefer-stable": true,
+    "prefer-lowest": false,
+    "platform": {},
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
+}

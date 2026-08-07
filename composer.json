@@ -1,30 +1,30 @@
 {
-    "name": "websyspro/devtools",
-    "version": "1.0.10",
-    "description": "Set of features for hot reloads during development",
-    "minimum-stability": "dev",
-    "prefer-stable": true,
-    "license": "MIT",
-    "type": "library",
-    "autoload": {
-        "psr-4": {
-            "Websyspro\\DevTools\\": "src/"
-        }
-    },
-    "bin": [
-        "bin/publish"
-    ],
-    "scripts": {
-        "publish": "php vendor/bin/publish"
-    },
-    "authors": [
-        {
-            "name": "websyspro",
-            "email": "websyspro.services@gmail.com"
-        }
-    ],
-    "require": {
-        "websyspro/utils": "^1.0",
-        "websyspro/package": "^1.0"
+  "name": "websyspro/devtools",
+  "version": "1.0.11",
+  "description": "Set of features for hot reloads during development",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "license": "MIT",
+  "type": "library",
+  "autoload": {
+    "psr-4": {
+      "Websyspro\\DevTools\\": "src/"
     }
+  },
+  "bin": [
+    "bin/publish"
+  ],
+  "scripts": {
+    "publish": "php vendor/bin/publish"
+  },
+  "authors": [
+    {
+      "name": "websyspro",
+      "email": "websyspro.services@gmail.com"
+    }
+  ],
+  "require": {
+    "websyspro/utils": "^1.0",
+    "websyspro/package": "^1.0"
+  }
 }

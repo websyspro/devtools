@@ -4,20 +4,60 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a393aa372441ada53982ec36a4a6fe29",
+    "content-hash": "b898eee7c1b2aa1831566e65c4aad349",
     "packages": [
         {
-            "name": "websyspro/utils",
-            "version": "1.0.0",
+            "name": "websyspro/package",
+            "version": "1.0.13",
             "source": {
                 "type": "git",
-                "url": "https://github.com/websyspro/utils.git",
-                "reference": "d571332895c1a7140034b5f1b0ebce55b104bdf1"
+                "url": "https://github.com/websyspro/package.git",
+                "reference": "78aaaf5f8bf8e828a4314eb333b53df564348f22"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/websyspro/utils/zipball/d571332895c1a7140034b5f1b0ebce55b104bdf1",
-                "reference": "d571332895c1a7140034b5f1b0ebce55b104bdf1",
+                "url": "https://api.github.com/repos/websyspro/package/zipball/78aaaf5f8bf8e828a4314eb333b53df564348f22",
+                "reference": "78aaaf5f8bf8e828a4314eb333b53df564348f22",
+                "shasum": ""
+            },
+            "bin": [
+                "bin/publish"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Websyspro\\Package\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "websyspro",
+                    "email": "websyspro.services@gmail.com"
+                }
+            ],
+            "description": "Version Management",
+            "support": {
+                "issues": "https://github.com/websyspro/package/issues",
+                "source": "https://github.com/websyspro/package/tree/v1.0.13"
+            },
+            "time": "2026-08-07T01:15:25+00:00"
+        },
+        {
+            "name": "websyspro/utils",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/websyspro/utils.git",
+                "reference": "27accab846a1612d9d991c392a5467439145a7b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/websyspro/utils/zipball/27accab846a1612d9d991c392a5467439145a7b7",
+                "reference": "27accab846a1612d9d991c392a5467439145a7b7",
                 "shasum": ""
             },
             "type": "library",
@@ -39,9 +79,9 @@
             "description": "Set of features for front-end and back-end development",
             "support": {
                 "issues": "https://github.com/websyspro/utils/issues",
-                "source": "https://github.com/websyspro/utils/tree/v1.0.0"
+                "source": "https://github.com/websyspro/utils/tree/v1.0.2"
             },
-            "time": "2026-08-06T20:12:31+00:00"
+            "time": "2026-08-06T21:22:33+00:00"
         }
     ],
     "packages-dev": [],

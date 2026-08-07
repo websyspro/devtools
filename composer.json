@@ -1,31 +1,30 @@
 {
-  "name": "websyspro/devtools",
-  "version": "1.0.4",
-  "description": "Set of features for hot reloads during development",
-  "minimum-stability": "dev",
-  "prefer-stable": true,
-  "license": "MIT",
-  "type": "library",
-  "autoload": {
-    "psr-4": {
-      "Websyspro\\DevTools\\": "src/"
+    "name": "websyspro/devtools",
+    "version": "1.0.9",
+    "description": "Set of features for hot reloads during development",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "license": "MIT",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Websyspro\\DevTools\\": "src/"
+        }
+    },
+    "bin": [
+        "bin/publish"
+    ],
+    "scripts": {
+        "publish": "php vendor/bin/publish"
+    },
+    "authors": [
+        {
+            "name": "websyspro",
+            "email": "websyspro.services@gmail.com"
+        }
+    ],
+    "require": {
+        "websyspro/utils": "^1.0",
+        "websyspro/package": "^1.0"
     }
-  },
-  "bin": [
-    "bin/publish.php"
-  ],  
-  "scripts": {
-    "publish": "php bin/publish.php",
-    "git:push": "git add . && git commit -m \"Update components\" && git push origin HEAD",
-    "git:pull": "git pull origin main"
-  },
-  "authors": [
-    {
-      "name": "websyspro",
-      "email": "websyspro.services@gmail.com"
-    }
-  ],
-  "require": {
-    "websyspro/utils": "^1.0"
-  }
 }

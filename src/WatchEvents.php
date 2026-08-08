@@ -79,13 +79,15 @@ class WatchEvents
     DispatchType $dispatchType,
     string|null $file = null
   ): void {
-    $eventHandlers = $this->handlers[ $dispatchType->name ] ?? [];
+    $eventHandlers = $this->handlers[
+      $dispatchType->name
+    ] ?? [];
 
     foreach( $eventHandlers as $handler ){
       if( is_object( $handler ) && method_exists( $handler, 'handle' ) ){
-        $handler->handle( $file, $dispatchType );
+        $handler->handle( $dispatchType, $file );
       } elseif( is_callable( $handler ) ){
-        $handler( $file, $dispatchType );
+        $handler( $dispatchType, $file );
       }
     }
   }

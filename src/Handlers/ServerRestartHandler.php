@@ -18,8 +18,8 @@ class ServerRestartHandler implements EventHandler
   }
 
   public function handle(
-    string $file,
-    DispatchType $dispatchType
+    DispatchType $dispatchType,
+    string|null $file = null
   ): void {
     // Se for Started, apenas inicia o servidor sem log de arquivo
     if( $dispatchType === DispatchType::Started ){

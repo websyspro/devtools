@@ -8,8 +8,8 @@ use Websyspro\DevTools\Interfaces\EventHandler;
 class LogHandler implements EventHandler
 {
   public function handle(
-    string $file,
-    DispatchType $dispatchType
+    DispatchType $dispatchType,
+    string|null $file = null
   ): void {
     $time  = date( 'Y-m-d H:i:s' );
     $event = $dispatchType->name;

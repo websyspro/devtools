@@ -5,121 +5,131 @@ namespace Websyspro\DevTools;
 use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Websyspro\Utils\Collection;
+use Websyspro\DevTools\Enums\DispatchType;
+
+use function is_object;
 
 class WatchEvents
 {
-  private Collection $events;
-  private Collection $directors;
-
-  private int $scanInterval = 1;
+  private array $handlers = [];
+  private array $directories = [];
+  private array $excludePatterns = [];
 
   public function registerDirectory(
     string $directory
   ): void {
-    if (isset( $this->directors ) === false) {
-      $this->directors = new Collection();
+    if( !is_dir( $directory ) ){
+      throw new \InvalidArgumentException(
+        "Directory not found: {$directory}"
+      );
     }
-
-    $this->directors->add(
-      $directory
-    );
+    
+    $this->directories[] = realpath( $directory );
   }
 
-  public function registerEvent(
-    string $handleEvent
+  public function excludePattern(
+    string $pattern
   ): void {
-    if (isset( $this->events ) === false) {
-      $this->events = new Collection();
-    }
+    $this->excludePatterns[] = $pattern;
+  }
 
-    $this->events->add(
-      $handleEvent
-    );
+  public function on(
+    DispatchType $eventType,
+    object|callable $handler
+  ): void {
+    $this->handlers[ $eventType->name ][] = $handler;
   }  
 
   private function scan(
-    Collection $filesResults = new Collection(),
-  ): Collection {
+    array $files = [],
+  ): array {
     clearstatcache();
 
-    $this->directors->foreach(
-      function( string $dirctory ) use( &$filesResults ) {
-        $recursiveIteratorIterators = (
-          new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator( 
-              $dirctory, FilesystemIterator::SKIP_DOTS
-            )
+    foreach( $this->directories as $directory ){
+      $recursiveIteratorIterators = (
+        new RecursiveIteratorIterator(
+          new RecursiveDirectoryIterator( 
+            $directory, FilesystemIterator::SKIP_DOTS
           )
-        );
+        )
+      );
 
-        foreach ($recursiveIteratorIterators as $item) {
-          if( $item->isFile() === true ){
-            $filesResults->add(
-              md5( $item->getPathname()), 
-              $item->getMTime()
-            );
+      foreach ($recursiveIteratorIterators as $item) {
+        if( $item->isFile() === false ){
+          continue;
+        }
+
+        $path = $item->getPathname();
+
+        // Ignora padrões excluídos (ex: Caches, vendor, etc)
+        foreach( $this->excludePatterns as $pattern ){
+          if( str_contains( $path, DIRECTORY_SEPARATOR . $pattern . DIRECTORY_SEPARATOR ) ){
+            continue 2;
           }
         }
-      }
-    );
 
-    return $filesResults;
+        $files[ $path ] = $item->getMTime();
+      }
+    }
+
+    return $files;
   }
 
-  private function hasCreateFile(
-    Collection $prev,
-    Collection $curr
+  private function dispatchEvent(
+    DispatchType $dispatchType,
+    string|null $file = null
   ): void {
-    $curr->foreach(
-      function( string $file, string $key ) use( $prev ){
-        if( $prev->findByKey( $key ) === null ){
-          // TODO RESTART
-          sleep( 1 );
-        }
-      }
-    );
-  }
+    $eventHandlers = $this->handlers[ $dispatchType->name ] ?? [];
 
-  private function hasModifyFile(
-    Collection $prev,
-    Collection $curr
-  ): void {
-    $curr->foreach(
-      function( string $time, string $key ) use( $prev ){
-        if( $prev->findByKey( $key ) &&  $prev->findByKey( $key ) !== $time ){
-          // TODO RESTART
-          sleep( 1 );
-        }
+    foreach( $eventHandlers as $handler ){
+      if( is_object( $handler ) && method_exists( $handler, 'handle' ) ){
+        $handler->handle( $file, $dispatchType );
+      } elseif( is_callable( $handler ) ){
+        $handler( $file, $dispatchType );
       }
-    );    
+    }
   }
-  
-  private function hasRemoveFile(
-    Collection $prev,
-    Collection $curr
-  ): void {
-    $prev->foreach(
-      function( string $time, string $key ) use( $curr ){
-        if( $curr->findByKey( $key ) === null ){
-          // TODO RESTART
-          sleep( 1 );
-        }
-      }
-    );    
-  }  
 
   public function listen(
-    Collection $prev = new Collection()
+    int $interval = 1
   ): never {
+    if( empty( $this->directories ) ){
+      throw new \RuntimeException(
+        "No directories registered to watch"
+      );
+    }
+
+    // Dispara evento Started antes do loop
+    $this->dispatchEvent(
+      DispatchType::Started
+    );
+
+    $prev = $this->scan();
+
     while( true ){
-      sleep(1);
+      sleep( $interval );
 
       $curr = $this->scan();
 
-      $this->hasCreateFile( $prev, $curr );
-      $this->hasModifyFile( $prev, $curr );
-      $this->hasRemoveFile( $prev, $curr );
+      foreach( $curr as $file => $time ){
+        if( !isset($prev[$file]) ){
+          $this->dispatchEvent(
+            DispatchType::Created, $file
+          );
+        } elseif( $prev[$file] !== $time ){
+          $this->dispatchEvent(
+            DispatchType::Modified, $file
+          );
+        }
+      }
+
+      foreach( $prev as $file => $mtime ){
+        if( !isset( $curr[$file] ) ){
+          $this->dispatchEvent(
+            DispatchType::Deleted, $file
+          );
+        }
+      }      
 
       $prev = $curr;
     }   

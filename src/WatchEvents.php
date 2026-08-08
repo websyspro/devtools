@@ -12,7 +12,9 @@ class WatchEvents
   private Collection $events;
   private Collection $directors;
 
-  private function registerDirectory(
+  private int $scanInterval = 1;
+
+  public function registerDirectory(
     string $directory
   ): void {
     if (isset( $this->directors ) === false) {
@@ -22,32 +24,6 @@ class WatchEvents
     $this->directors->add(
       $directory
     );
-  }
-
-  private function scanFiles(
-    RecursiveIteratorIterator $recursiveIteratorIterators,
-    Collection $filesResults = new Collection(),
-  ): Collection {
-    clearstatcache();
-
-    $recursiveIteratorIterators = (
-      new RecursiveIteratorIterator(
-        new RecursiveDirectoryIterator( 
-          "C:\Temp", FilesystemIterator::SKIP_DOTS
-        )
-      )
-    );
-
-    foreach ($recursiveIteratorIterators as $item) {
-      if ($item->isFile() === true) {
-        $filesResults->add(
-          $item->getPathname(),
-          $item->getMTime()
-        );
-      }
-    }
-
-    return $filesResults;
   }
 
   public function registerEvent(
@@ -60,10 +36,92 @@ class WatchEvents
     $this->events->add(
       $handleEvent
     );
+  }  
+
+  private function scan(
+    Collection $filesResults = new Collection(),
+  ): Collection {
+    clearstatcache();
+
+    $this->directors->foreach(
+      function( string $dirctory ) use( &$filesResults ) {
+        $recursiveIteratorIterators = (
+          new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator( 
+              $dirctory, FilesystemIterator::SKIP_DOTS
+            )
+          )
+        );
+
+        foreach ($recursiveIteratorIterators as $item) {
+          if( $item->isFile() === true ){
+            $filesResults->add(
+              md5( $item->getPathname()), 
+              $item->getMTime()
+            );
+          }
+        }
+      }
+    );
+
+    return $filesResults;
   }
 
-  public function listen(
+  private function hasCreateFile(
+    Collection $prev,
+    Collection $curr
   ): void {
-    // TODO    
+    $curr->foreach(
+      function( string $file, string $key ) use( $prev ){
+        if( $prev->findByKey( $key ) === null ){
+          // TODO RESTART
+          sleep( 1 );
+        }
+      }
+    );
+  }
+
+  private function hasModifyFile(
+    Collection $prev,
+    Collection $curr
+  ): void {
+    $curr->foreach(
+      function( string $time, string $key ) use( $prev ){
+        if( $prev->findByKey( $key ) &&  $prev->findByKey( $key ) !== $time ){
+          // TODO RESTART
+          sleep( 1 );
+        }
+      }
+    );    
+  }
+  
+  private function hasRemoveFile(
+    Collection $prev,
+    Collection $curr
+  ): void {
+    $prev->foreach(
+      function( string $time, string $key ) use( $curr ){
+        if( $curr->findByKey( $key ) === null ){
+          // TODO RESTART
+          sleep( 1 );
+        }
+      }
+    );    
+  }  
+
+  public function listen(
+    Collection $prev = new Collection()
+  ): never {
+    while( true ){
+      sleep(1);
+
+      $curr = $this->scan();
+
+      $this->hasCreateFile( $prev, $curr );
+      $this->hasModifyFile( $prev, $curr );
+      $this->hasRemoveFile( $prev, $curr );
+
+      $prev = $curr;
+    }   
   }
 }

@@ -2,6 +2,7 @@
 
 namespace Websyspro\DevTools;
 
+use InvalidArgumentException;
 use Websyspro\DevTools\Enums\DispatchType;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -94,7 +95,7 @@ class WatchEvents
    * 
    * @param string $directory Caminho absoluto ou relativo do diretório
    * 
-   * @throws \InvalidArgumentException Se o diretório não existir
+   * @throws InvalidArgumentException Se o diretório não existir
    * 
    * @return void
    * 
@@ -108,7 +109,7 @@ class WatchEvents
     string $directory
   ): void {
     if( !is_dir( $directory ) ){
-      throw new \InvalidArgumentException(
+      throw new InvalidArgumentException(
         "Directory not found: {$directory}"
       );
     }

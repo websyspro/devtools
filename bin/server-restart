@@ -3,7 +3,6 @@
 
 use Websyspro\DevTools\Handlers\ServerRestartHandler;
 
-
 /*
  * Update Version Composer
  */

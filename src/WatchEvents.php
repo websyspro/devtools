@@ -91,13 +91,35 @@ class WatchEvents
    */
   private array $excludePatterns = [];
 
+  /**
+   * Configuração do arquivo watch.json
+   * 
+   * @var WatchJSON
+   */
   public WatchJSON $watchJSON;
 
+  /**
+   * Construtor da classe WatchEvents
+   * 
+   * Inicializa o sistema de monitoramento e carrega configurações
+   * do arquivo watch.json se existir no diretório base.
+   * 
+   * @return void
+   */
   public function __construct(
   ){
     $this->configDefault();
   }
   
+  /**
+   * Carrega configuração padrão do arquivo watch.json
+   * 
+   * Procura e carrega o arquivo watch.json no diretório base definido
+   * pela constante DIR_BASE. Registra automaticamente os diretórios
+   * incluídos e os padrões de exclusão definidos no arquivo.
+   * 
+   * @return void
+   */
   private function configDefault(
   ): void {
     if( defined( "DIR_BASE" )){
@@ -174,6 +196,24 @@ class WatchEvents
     $this->excludePatterns[] = $pattern;
   }
 
+  /**
+   * Registra um handler para todos os tipos de evento
+   * 
+   * Registra um handler que implementa a interface EventHandler
+   * para responder a todos os eventos (Started, Created, Modified, Deleted).
+   * Se o handler possuir o método watch(), ele será chamado passando
+   * a instância do WatchEvents para configuração adicional.
+   * 
+   * @param EventHandler $handler Handler a ser registrado
+   * 
+   * @return void
+   * 
+   * @example
+   * ```php
+   * $handler = new ServerRestartHandler(__DIR__ . "/index.php");
+   * $watcher->registerHandler($handler);
+   * ```
+   */
   public function registerHandler(
     EventHandler $handler
   ): void {

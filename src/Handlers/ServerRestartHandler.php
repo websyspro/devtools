@@ -6,6 +6,8 @@ use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;
 
+use function sprintf;
+
 class ServerRestartHandler 
 implements EventHandler
 {
@@ -38,8 +40,10 @@ implements EventHandler
     $this->clearTerminal();
     $this->printHeader();
 
-    $cmd = PHP_BINARY . " " . $this->watchEvents->watchJSON->script;
-    
+    $cmd = sprintf( "%s %s", 
+      PHP_BINARY, $this->watchEvents->watchJSON->script
+    );
+
     $descriptors = [
       0 => [ "pipe", "r" ],
       1 => STDOUT,

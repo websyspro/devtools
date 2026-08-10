@@ -3,6 +3,7 @@
 
 use Websyspro\DevTools\Handlers\ServerRestartHandler;
 
+
 /*
  * Update Version Composer
  */
@@ -17,5 +18,5 @@ require DIR_BASE . "vendor/autoload.php";
 use Websyspro\DevTools\WatchEvents;
 $watcher = new WatchEvents();
 $watcher->registerHandler(
-  new ServerRestartHandler
+  new ServerRestartHandler()  
 );

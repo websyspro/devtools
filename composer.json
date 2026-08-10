@@ -1,6 +1,6 @@
 {
   "name": "websyspro/devtools",
-  "version": "1.0.25",
+  "version": "1.0.26",
   "description": "Set of features for hot reloads during development",
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -25,6 +25,7 @@
   ],
   "require": {
     "websyspro/utils": "^1.0",
-    "websyspro/package": "^1.0"
+    "websyspro/package": "^1.0",
+    "websyspro/logger": "^1.0"
   }
 }

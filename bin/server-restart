@@ -7,7 +7,6 @@ use Websyspro\DevTools\Handlers\ServerRestartHandler;
 /*
  * Update Version Composer
  */
-
 defined( "DIR_BASE" ) || define(
   "DIR_BASE", realpath( 
     __DIR__ . "/../../../../"

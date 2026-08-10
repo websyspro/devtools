@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Update Version Composer
+ */
+
+defined( "DIR_BASE" ) || define(
+  "DIR_BASE", realpath( 
+    __DIR__ . "/../../../../"
+  ) . DIRECTORY_SEPARATOR
+);
+
+require DIR_BASE . "vendor/autoload.php";
+
+echo DIR_BASE;

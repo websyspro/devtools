@@ -13,9 +13,8 @@ implements EventHandler
   private mixed $serverProcess = null;
   private string $serverScript;
 
-  public function __construct(){
-    
-  }
+  public function __construct(
+  ){}
 
   public function watch(
     WatchEvents $watchEvents
@@ -27,11 +26,6 @@ implements EventHandler
     DispatchType $dispatchType,
     string|null $file = null
   ): void {
-    // Se for Started, apenas inicia o servidor sem log de arquivo
-    if( $dispatchType === DispatchType::Started ){
-      return; // Servidor já foi iniciado no __construct
-    }
-
     $this->log( $dispatchType->name, basename( $file ) );
     $this->restartServer();
   }
@@ -41,7 +35,7 @@ implements EventHandler
     $this->clearTerminal();
     $this->printHeader();
 
-    $cmd = PHP_BINARY . " " . $this->serverScript;
+    $cmd = PHP_BINARY . " " . $this->watchEvents->watchJSON->script;
     
     $descriptors = [
       0 => [ "pipe", "r" ],

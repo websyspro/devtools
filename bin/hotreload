@@ -16,7 +16,7 @@ defined( "DIR_BASE" ) || define(
 
 require DIR_BASE . "vendor/autoload.php";
 use Websyspro\DevTools\WatchEvents;
+
 $watcher = new WatchEvents();
-$watcher->registerHandler(
-  new ServerRestartHandler()  
-);
+$watcher->registerHandler( handler: new ServerRestartHandler());
+$watcher->listen( interval: 1 );

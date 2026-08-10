@@ -91,13 +91,13 @@ class WatchEvents
    */
   private array $excludePatterns = [];
 
-  private WatchJSON $watchJSON;
+  public WatchJSON $watchJSON;
 
   public function __construct(
   ){
     $this->configDefault();
   }
-
+  
   private function configDefault(
   ): void {
     if( defined( "DIR_BASE" )){
@@ -106,8 +106,8 @@ class WatchEvents
       );
 
       if( file_exists( $watchFile )){
-        $this->watchJSON = json_decode(
-          file_get_contents( $watchFile )
+        $this->watchJSON = new WatchJSON(
+          ...(array)json_decode( file_get_contents( $watchFile ))
         );
 
         foreach( $this->watchJSON->includes as $include ){

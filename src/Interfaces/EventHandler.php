@@ -3,6 +3,7 @@
 namespace Websyspro\DevTools\Interfaces;
 
 use Websyspro\DevTools\Enums\DispatchType;
+use Websyspro\DevTools\WatchEvents;
 
 /**
  * Interface EventHandler
@@ -36,6 +37,10 @@ use Websyspro\DevTools\Enums\DispatchType;
  */
 interface EventHandler
 {
+  public function watch(
+    WatchEvents $watchEvents
+  ): void;
+
   /**
    * Processa um evento de mudança de arquivo
    * 

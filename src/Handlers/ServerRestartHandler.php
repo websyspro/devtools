@@ -4,17 +4,23 @@ namespace Websyspro\DevTools\Handlers;
 
 use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
+use Websyspro\DevTools\WatchEvents;
 
-class ServerRestartHandler implements EventHandler
+class ServerRestartHandler 
+implements EventHandler
 {
+  private WatchEvents $watchEvents;
   private mixed $serverProcess = null;
   private string $serverScript;
 
-  public function __construct(
-    string $serverScript
-  ){
-    $this->serverScript = $serverScript;
-    $this->startServer();
+  public function __construct(){
+    
+  }
+
+  public function watch(
+    WatchEvents $watchEvents
+  ): void {
+    $this->watchEvents = $watchEvents;
   }
 
   public function handle(
@@ -30,8 +36,8 @@ class ServerRestartHandler implements EventHandler
     $this->restartServer();
   }
 
-  private function startServer(): void
-  {
+  private function startServer(
+  ): void {
     $this->clearTerminal();
     $this->printHeader();
 

@@ -9,6 +9,8 @@ use RecursiveIteratorIterator;
 use FilesystemIterator;
 use RuntimeException;
 
+use Websyspro\DevTools\Interfaces\EventHandler;
+use Websyspro\DevTools\Interfaces\WatchJSON;
 use function is_object;
 use function defined;
 use function sprintf;
@@ -89,6 +91,8 @@ class WatchEvents
    */
   private array $excludePatterns = [];
 
+  private WatchJSON $watchJSON;
+
   public function __construct(
   ){
     $this->configDefault();
@@ -96,17 +100,23 @@ class WatchEvents
 
   private function configDefault(
   ): void {
-    if( defined( DIR_BASE )){
+    if( defined( "DIR_BASE" )){
       $watchFile = sprintf(
         "%swatch.json", DIR_BASE
       );
 
       if( file_exists( $watchFile )){
-        $watchFileJson = json_decode(
+        $this->watchJSON = json_decode(
           file_get_contents( $watchFile )
         );
 
-        print_r( $watchFileJson );  
+        foreach( $this->watchJSON->includes as $include ){
+          $this->registerDirectory( $include );
+        }
+
+        foreach( $this->watchJSON->excludes as $exclude ){
+          $this->excludePattern( $exclude );
+        }
       }
     }
   }
@@ -163,6 +173,19 @@ class WatchEvents
   ): void {
     $this->excludePatterns[] = $pattern;
   }
+
+  public function registerHandler(
+    EventHandler $handler
+  ): void {
+    if( method_exists( $handler, "watch" )){
+      $handler->watch( $this );
+    }
+
+    $this->handlers[ DispatchType::Started->name  ][] = $handler;
+    $this->handlers[ DispatchType::Created->name  ][] = $handler;
+    $this->handlers[ DispatchType::Modified->name ][] = $handler;
+    $this->handlers[ DispatchType::Deleted->name  ][] = $handler;
+  }   
 
   /**
    * Registra um handler para um tipo de evento
@@ -304,6 +327,12 @@ class WatchEvents
     if( empty( $this->directories ) ){
       throw new RuntimeException(
         "No directories registered to watch"
+      );
+    }
+
+    if( empty( $this->watchJSON->script )){
+      throw new RuntimeException(
+        "No scripts registered to watch"
       );
     }
 

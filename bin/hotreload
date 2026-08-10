@@ -12,5 +12,5 @@ defined( "DIR_BASE" ) || define(
 );
 
 require DIR_BASE . "vendor/autoload.php";
-
-echo DIR_BASE;
+use Websyspro\DevTools\WatchEvents;
+$watcher = new WatchEvents();

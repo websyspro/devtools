@@ -10,6 +10,8 @@ use FilesystemIterator;
 use RuntimeException;
 
 use function is_object;
+use function defined;
+use function sprintf;
 
 /**
  * WatchEvents - Sistema de observação de mudanças em arquivos
@@ -86,6 +88,28 @@ class WatchEvents
    * @var array<string>
    */
   private array $excludePatterns = [];
+
+  public function __construct(
+  ){
+    $this->configDefault();
+  }
+
+  private function configDefault(
+  ): void {
+    if( defined( DIR_BASE )){
+      $watchFile = sprintf(
+        "%swatch.json", DIR_BASE
+      );
+
+      if( file_exists( $watchFile )){
+        $watchFileJson = json_decode(
+          file_get_contents( $watchFile )
+        );
+
+        print_r( $watchFileJson );  
+      }
+    }
+  }
 
   /**
    * Registra um diretório para monitoramento

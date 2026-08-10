@@ -26,7 +26,10 @@ implements EventHandler
     DispatchType $dispatchType,
     string|null $file = null
   ): void {
-    $this->log( $dispatchType->name, basename( $file ) );
+    $file !== null
+      ? $this->log( $dispatchType->name, basename( $file ))
+      : $this->log( $dispatchType->name, "" );
+
     $this->restartServer();
   }
 
@@ -88,11 +91,11 @@ implements EventHandler
     echo "\033[2J\033[H";
   }
 
-  private function printHeader(): void
-  {
+  private function printHeader(
+  ): void {
     $time = date( 'Y-m-d H:i:s' );
     echo "\033[35mPHP Watch — Hot Reload\033[0m\n";
-    echo "\033[32mExecutando {$this->serverScript}\033[0m\n";
+    echo "\033[32mExecutando {$this->watchEvents->watchJSON->script}\033[0m\n";
     echo "\033[32mMonitorando mudanças — {$time}\033[0m\n\n";
   }
 

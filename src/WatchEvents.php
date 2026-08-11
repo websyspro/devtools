@@ -277,8 +277,6 @@ class WatchEvents
   private function scan(
     array $files = [],
   ): array {
-    clearstatcache();
-
     foreach( $this->directories as $directory ){
       $recursiveIteratorIterators = (
         new RecursiveIteratorIterator(
@@ -302,6 +300,7 @@ class WatchEvents
           }
         }
 
+        clearstatcache( true, $path );
         $files[ $path ] = $item->getMTime();
       }
     }
@@ -384,19 +383,23 @@ class WatchEvents
     $prev = $this->scan();
 
     while( true ){
-      sleep( $interval );
+      usleep( $interval * 500000 ); // 0.5s em microssegundos
 
       $curr = $this->scan();
+
+      $hasChanges = false;
 
       foreach( $curr as $file => $time ){
         if( !isset($prev[$file]) ){
           $this->dispatchEvent(
             DispatchType::Created, $file
           );
+          $hasChanges = true;
         } elseif( $prev[$file] !== $time ){
           $this->dispatchEvent(
             DispatchType::Modified, $file
           );
+          $hasChanges = true;
         }
       }
 
@@ -405,10 +408,15 @@ class WatchEvents
           $this->dispatchEvent(
             DispatchType::Deleted, $file
           );
+          $hasChanges = true;
         }
       }      
 
       $prev = $curr;
+
+      if( !$hasChanges ){
+        usleep( $interval * 500000 ); // Espera adicional se não houve mudanças
+      }
     }   
   }
 }

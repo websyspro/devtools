@@ -207,6 +207,13 @@ implements EventHandler
     echo "\033[2J\033[H";
   }
 
+  private function printHeaderDispatchTypeText(
+  ): string {
+    return sprintf(
+      " {} ", $this->dispatchType->name
+    );
+  }  
+
   private function printHeaderDispatchTypeStyled(
   ): Styled {
     return match( $this->dispatchType ){
@@ -250,7 +257,7 @@ implements EventHandler
       ))
       ->eof()
       ->text(
-        $this->dispatchType->name, 
+        $this->printHeaderDispatchTypeText(), 
         $this->printHeaderDispatchTypeStyled())
       ->eof()  
       ->eof();

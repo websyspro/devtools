@@ -137,7 +137,7 @@ implements EventHandler
     );
 
     if( !is_resource( $process ) ){
-      echo "[ERRO] Falha ao iniciar servidor\n";
+      // echo "[ERRO] Falha ao iniciar servidor\n";
       return;
     }
 
@@ -189,7 +189,7 @@ implements EventHandler
     }
 
     proc_close( $this->serverProcess );
-    echo "[INFO] Servidor encerrado\n";
+    // echo "[INFO] Servidor encerrado\n";
 
     sleep(1);
   }

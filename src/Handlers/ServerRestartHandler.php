@@ -233,12 +233,5 @@ implements EventHandler
       )
       ->eof()  
       ->eof();
-
-    /*
-    $time = date( 'Y-m-d H:i:s' );
-    echo "\033[35mPHP Watch — Hot Reload\033[0m\n";
-    echo "\033[32mExecutando {$this->watchEvents->watchJSON->script}\033[0m\n";
-    echo "\033[32mMonitorando mudanças — {$time}\033[0m\n\n"; 
-    */
   }
 }

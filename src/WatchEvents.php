@@ -300,7 +300,7 @@ class WatchEvents
           }
         }
 
-        clearstatcache( true, $path );
+        // clearstatcache( true, $path );
         $files[ $path ] = $item->getMTime();
       }
     }

@@ -49,9 +49,16 @@ implements EventHandler
   /**
    * Caminho do script do servidor a executar
    * 
-   * @var string
+   * @var DispatchType
    */
-  private string $serverScript;
+  private DispatchType $dispatchType;
+
+  /**
+   * Caminho do script do servidor a executar
+   * 
+   * @var string|null
+   */
+  private string|null $file;  
 
   /**
    * Construtor do handler
@@ -96,9 +103,8 @@ implements EventHandler
     DispatchType $dispatchType,
     string|null $file = null
   ): void {
-    $file !== null
-      ? $this->log( $dispatchType->name, basename( $file ))
-      : $this->log( $dispatchType->name, "" );
+    $this->dispatchType = $dispatchType;
+    $this->file = $file;
 
     $this->restartServer();
   }
@@ -214,28 +220,15 @@ implements EventHandler
    */
   private function printHeader(
   ): void {
+    $this->terminal
+      ->yellow( "[Watch] Server Restart Handler" )
+      ->eof();
+
+    /*
     $time = date( 'Y-m-d H:i:s' );
     echo "\033[35mPHP Watch — Hot Reload\033[0m\n";
     echo "\033[32mExecutando {$this->watchEvents->watchJSON->script}\033[0m\n";
-    echo "\033[32mMonitorando mudanças — {$time}\033[0m\n\n";
-  }
-
-  /**
-   * Registra evento no log do terminal
-   * 
-   * Exibe mensagem formatada com timestamp, tipo de evento e
-   * nome do arquivo em cor magenta.
-   * 
-   * @param string $event Nome do tipo de evento (Started, Modified, etc)
-   * @param string $file Nome do arquivo afetado
-   * 
-   * @return void
-   */
-  private function log(
-    string $event,
-    string $file
-  ): void {
-    $time = date( 'Y-m-d H:i:s' );
-    echo "\033[35m[{$time}] {$event}: {$file}\033[0m\n";
+    echo "\033[32mMonitorando mudanças — {$time}\033[0m\n\n"; 
+    */
   }
 }

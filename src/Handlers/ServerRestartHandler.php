@@ -220,7 +220,7 @@ implements EventHandler
     Terminal::init()
       ->clear()
       ->text( "[Watch] Server Restart Handler", new Styled(
-        color: [255,100,0], bgColor: [], bold: true
+        color: [255,200,15], bgColor: [], bold: true
       ))
       ->eof();
 

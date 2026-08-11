@@ -207,6 +207,24 @@ implements EventHandler
     echo "\033[2J\033[H";
   }
 
+  private function printHeaderDispatchTypeStyled(
+  ): Styled {
+    return match( $this->dispatchType ){
+      DispatchType::Started => new Styled(
+        color: [255,255,255], bgColor: [115, 45, 255], bold: true
+      ),
+      DispatchType::Created => new Styled(
+        color: [255,255,255], bgColor: [0,200,0], bold: true
+      ),
+      DispatchType::Modified => new Styled(
+        color: [255,255,255], bgColor: [0,100,180], bold: true
+      ),
+      DispatchType::Deleted => new Styled(
+        color: [255,255,255], bgColor: [255,0,0], bold: true
+      )
+    };
+  }
+
   /**
    * Exibe cabeçalho informativo no terminal
    * 
@@ -224,20 +242,8 @@ implements EventHandler
       ))
       ->eof()
       ->text(
-        $this->dispatchType->name, match( $this->dispatchType ){
-          DispatchType::Started => new Styled(
-            [255,255,255], [115, 45, 255], true
-          ),
-          DispatchType::Created => new Styled(
-            [255,255,255], [0,200,0], true
-          ),
-          DispatchType::Modified => new Styled(
-            [255,255,255], [0,100,180], true
-          ),
-          DispatchType::Deleted => new Styled(
-            [255,255,255], [255,0,0], true
-          )
-      })
+        $this->dispatchType->name, 
+        $this->printHeaderDispatchTypeStyled())
       ->eof();
 
     /*

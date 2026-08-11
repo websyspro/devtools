@@ -210,7 +210,7 @@ implements EventHandler
   private function printHeaderDispatchTypeText(
   ): string {
     return sprintf(
-      "%s %s", $this->dispatchType->name, $this->file
+      "[%s] %s", $this->dispatchType->name, $this->file
     );
   }  
 

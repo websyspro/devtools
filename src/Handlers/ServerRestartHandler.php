@@ -222,6 +222,22 @@ implements EventHandler
       ->text( "[Watch] Server Restart Handler", new Styled(
         color: [255,200,15], bgColor: [], bold: true
       ))
+      ->eof()
+      ->text(
+        $this->dispatchType->name, match( $this->dispatchType ){
+          DispatchType::Started => new Styled(
+            [0, 0, 0], [255, 255, 255], true
+          ),
+          DispatchType::Created => new Styled(
+            [255,255,255], [0,200,0], true
+          ),
+          DispatchType::Modified => new Styled(
+            [255,255,255], [0,100,180], true
+          ),
+          DispatchType::Deleted => new Styled(
+            [255,255,255], [255,0,0], true
+          )
+      })
       ->eof();
 
     /*

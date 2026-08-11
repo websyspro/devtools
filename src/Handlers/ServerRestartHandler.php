@@ -37,8 +37,6 @@ implements EventHandler
    */
   private WatchEvents $watchEvents;
 
-  private Terminal $terminal;
-
   /**
    * Recurso do processo do servidor em execução
    * 
@@ -68,9 +66,7 @@ implements EventHandler
    * @return void
    */
   public function __construct(
-  ){
-    $this->terminal = new Terminal();
-  }
+  ){}
 
   /**
    * Registra a instância do WatchEvents
@@ -220,7 +216,8 @@ implements EventHandler
    */
   private function printHeader(
   ): void {
-    $this->terminal
+    Terminal::init()
+      ->clear()
       ->yellow( "[Watch] Server Restart Handler" )
       ->eof();
 

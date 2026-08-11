@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "45e142d614b54abaf267ee82e0c327b8",
+    "content-hash": "0213541d3962fbed733e05b3e1c7d42e",
     "packages": [
         {
             "name": "websyspro/logger",
-            "version": "1.0.29",
+            "version": "1.0.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/websyspro/logger.git",
-                "reference": "afa09a62abc587501989b7df252176a64924b94a"
+                "reference": "4e75f39cd537cc9611d3d544d5184297a25023fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/websyspro/logger/zipball/afa09a62abc587501989b7df252176a64924b94a",
-                "reference": "afa09a62abc587501989b7df252176a64924b94a",
+                "url": "https://api.github.com/repos/websyspro/logger/zipball/4e75f39cd537cc9611d3d544d5184297a25023fe",
+                "reference": "4e75f39cd537cc9611d3d544d5184297a25023fe",
                 "shasum": ""
             },
             "require": {
@@ -45,9 +45,9 @@
             "description": "Library for logs in server api",
             "support": {
                 "issues": "https://github.com/websyspro/logger/issues",
-                "source": "https://github.com/websyspro/logger/tree/1.0.29"
+                "source": "https://github.com/websyspro/logger/tree/1.0.30"
             },
-            "time": "2026-08-09T20:25:37+00:00"
+            "time": "2026-08-11T00:30:37+00:00"
         },
         {
             "name": "websyspro/package",

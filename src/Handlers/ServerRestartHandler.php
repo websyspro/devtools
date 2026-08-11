@@ -211,16 +211,24 @@ implements EventHandler
   ): Styled {
     return match( $this->dispatchType ){
       DispatchType::Started => new Styled(
-        color: [255,255,255], bgColor: [115, 45, 255], bold: true
+        color: [255,255,255],
+        bgColor: [115, 45, 255],
+        bold: true
       ),
       DispatchType::Created => new Styled(
-        color: [255,255,255], bgColor: [0,200,0], bold: true
+        color: [255,255,255],
+        bgColor: [0,200,0],
+        bold: true
       ),
       DispatchType::Modified => new Styled(
-        color: [255,255,255], bgColor: [0,100,180], bold: true
+        color: [255,255,255], 
+        bgColor: [0,100,180],
+        bold: true
       ),
       DispatchType::Deleted => new Styled(
-        color: [255,255,255], bgColor: [255,0,0], bold: true
+        color: [255,255,255],
+        bgColor: [255,0,0],
+        bold: true
       )
     };
   }

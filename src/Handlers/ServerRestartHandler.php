@@ -6,6 +6,7 @@ use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;
 
+use Websyspro\Logger\Styled;
 use Websyspro\Logger\Terminal;
 use function sprintf;
 use function is_resource;
@@ -218,7 +219,9 @@ implements EventHandler
   ): void {
     Terminal::init()
       ->clear()
-      ->yellow( "[Watch] Server Restart Handler" )
+      ->text( "[Watch] Server Restart Handler", new Styled(
+        color: [255,100,0], bgColor: [], bold: true
+      ))
       ->eof();
 
     /*

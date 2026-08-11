@@ -252,6 +252,7 @@ implements EventHandler
       ->text(
         $this->dispatchType->name, 
         $this->printHeaderDispatchTypeStyled())
+      ->eof()  
       ->eof();
 
     /*

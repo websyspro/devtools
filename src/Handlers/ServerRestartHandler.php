@@ -210,35 +210,9 @@ implements EventHandler
   private function printHeaderDispatchTypeText(
   ): string {
     return sprintf(
-      " {%s} %s", $this->dispatchType->name, $this->file
+      "%s %s", $this->dispatchType->name, $this->file
     );
   }  
-
-  private function printHeaderDispatchTypeStyled(
-  ): Styled {
-    return match( $this->dispatchType ){
-      DispatchType::Started => new Styled(
-        color: [255,255,255],
-        bgColor: [115, 45, 255],
-        bold: true
-      ),
-      DispatchType::Created => new Styled(
-        color: [255,255,255],
-        bgColor: [0,200,0],
-        bold: true
-      ),
-      DispatchType::Modified => new Styled(
-        color: [255,255,255], 
-        bgColor: [0,100,180],
-        bold: true
-      ),
-      DispatchType::Deleted => new Styled(
-        color: [255,255,255],
-        bgColor: [255,0,0],
-        bold: true
-      )
-    };
-  }
 
   /**
    * Exibe cabeçalho informativo no terminal
@@ -256,9 +230,9 @@ implements EventHandler
         color: [255,200,15], bgColor: [], bold: true
       ))
       ->eof()
-      ->text(
-        $this->printHeaderDispatchTypeText(), 
-        $this->printHeaderDispatchTypeStyled())
+      ->green(
+        $this->printHeaderDispatchTypeText()
+      )
       ->eof()  
       ->eof();
 

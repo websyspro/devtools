@@ -189,8 +189,6 @@ implements EventHandler
     }
 
     proc_close( $this->serverProcess );
-    // echo "[INFO] Servidor encerrado\n";
-
     sleep(1);
   }
 

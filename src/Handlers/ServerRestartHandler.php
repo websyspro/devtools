@@ -117,7 +117,6 @@ implements EventHandler
    */
   private function startServer(
   ): void {
-    $this->clearTerminal();
     $this->printHeader();
 
     $cmd = sprintf( "%s %s", 
@@ -189,20 +188,7 @@ implements EventHandler
     }
 
     proc_close( $this->serverProcess );
-    sleep(1);
-  }
-
-  /**
-   * Limpa o terminal
-   * 
-   * Usa sequências ANSI para limpar a tela e posicionar o cursor
-   * no início. Compatível com terminais modernos.
-   * 
-   * @return void
-   */
-  private function clearTerminal(
-  ): void {
-    echo "\033[2J\033[H";
+    usleep( 1 * 500000 ); 
   }
 
   private function printHeaderDispatchTypeText(

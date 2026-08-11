@@ -226,7 +226,7 @@ implements EventHandler
       ->text(
         $this->dispatchType->name, match( $this->dispatchType ){
           DispatchType::Started => new Styled(
-            [0, 0, 0], [255, 255, 255], true
+            [255,255,255], [115, 45, 255], true
           ),
           DispatchType::Created => new Styled(
             [255,255,255], [0,200,0], true

@@ -1,6 +1,6 @@
 {
   "name": "websyspro/devtools",
-  "version": "1.0.52",
+  "version": "1.0.53",
   "description": "Set of features for hot reloads during development",
   "minimum-stability": "dev",
   "prefer-stable": true,
@@ -12,7 +12,8 @@
     }
   },
   "bin": [
-    "bin/server-restart"
+    "bin/server-restart",
+    "bin/browser-reload"
   ],
   "scripts": {
     "publish": "php vendor/bin/publish"

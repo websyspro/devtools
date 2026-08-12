@@ -2,28 +2,24 @@
 <?php
 
 /**
- * Server Restart CLI
+ * Browser Reload CLI
  * 
  * Inicia o sistema de hot reload para navegadores.
  * Monitora mudanças em arquivos e notifica browsers conectados
  * para recarregar automaticamente.
  */
 
-
-/*
-* Update Version Composer
-*/
-defined( "DIR_BASE" ) || define(
+defined("DIR_BASE") || define(
   "DIR_BASE", realpath( 
     __DIR__ . "/../../../../"
-    ) . DIRECTORY_SEPARATOR
-  );
-  
+  ) . DIRECTORY_SEPARATOR
+);
+
 require DIR_BASE . "vendor/autoload.php";
 
 use Websyspro\DevTools\WatchEvents;
-use Websyspro\DevTools\Handlers\ServerRestartHandler;
+use Websyspro\DevTools\Handlers\BrowserReloadHandler;
 
 $watcher = new WatchEvents();
-$watcher->registerHandler( handler: new ServerRestartHandler());
-$watcher->listen( interval: 1 );
+$watcher->registerHandler(new BrowserReloadHandler());
+$watcher->listen(interval: 1);

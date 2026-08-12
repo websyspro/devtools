@@ -5,8 +5,8 @@ namespace Websyspro\DevTools\Handlers;
 use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;
-use Websyspro\DevTools\WebSocket\Server;
 use Websyspro\DevTools\Shareds\Run;
+use function sprintf;
 
 /**
  * BrowserReloadHandler - Handler para hot reload no navegador
@@ -18,13 +18,6 @@ use Websyspro\DevTools\Shareds\Run;
  */
 class BrowserReloadHandler implements EventHandler
 {
-  /**
-   * Instância do servidor WebSocket
-   * 
-   * @var Server
-   */
-  private Server $server;
-
   /**
    * Instância do WatchEvents
    * 
@@ -47,7 +40,7 @@ class BrowserReloadHandler implements EventHandler
   public function __construct(
     private int $port = 8080
   ){
-    $this->server = new Server($this->port);
+    // Constructor vazio - WebSocket será iniciado no handle(Started)
   }
 
   /**
@@ -79,16 +72,9 @@ class BrowserReloadHandler implements EventHandler
       return;
     }
 
-    // Detecta tipo de arquivo para reload inteligente
-    $reloadType = $this->getReloadType($file);
-
-    // Envia broadcast para todos os clientes
-    $this->server->broadcast([
-      'reload' => true,
-      'type' => $reloadType,
-      'file' => $file ? basename($file) : null,
-      'timestamp' => time()
-    ]);
+    // Para outros eventos, não faz nada
+    // O WebSocket Server que está rodando em processo separado
+    // vai receber as conexões dos browsers
   }
 
   /**
@@ -98,35 +84,15 @@ class BrowserReloadHandler implements EventHandler
    */
   private function startWebSocketProcess(
   ): void {
-    $websocketBin = dirname(__DIR__, 2) . '/bin/websocket-start';
-    $command = PHP_BINARY . ' ' . $websocketBin . ' ' . $this->port;
-
     $this->websocketProcess = new Run();
-    $this->websocketProcess->command($command, silence: true);
+    $this->websocketProcess->command(
+      message: sprintf( 
+        "%s vendor/bin/websocket-start %s", 
+          PHP_BINARY, $this->port
+      ), silence: true
+    );
 
     // Aguarda WebSocket inicializar
     sleep(1);
-  }
-
-  /**
-   * Determina o tipo de reload baseado na extensão do arquivo
-   * 
-   * @param string|null $file Caminho do arquivo
-   * @return string Tipo de reload (full, css, script)
-   */
-  private function getReloadType(
-    string|null $file
-  ): string {
-    if ($file === null) {
-      return 'full';
-    }
-
-    $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
-
-    return match ($extension) {
-      'css' => 'css',
-      'js' => 'script',
-      default => 'full'
-    };
   }
 }

@@ -65,7 +65,7 @@ class Run
 
     /* Validate process was created successfully */
     if (is_resource($this->process) === false) {
-      throw new RuntimeException("Could not start process: {$message}");
+      throw new RuntimeException( "Could not start process: {$message}" );
     }
 
     /* Close pipes if not silenced */

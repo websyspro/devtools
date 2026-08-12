@@ -87,8 +87,8 @@ class BrowserReloadHandler implements EventHandler
     $this->websocketProcess = new Run();
     $this->websocketProcess->command(
       message: sprintf( 
-        "%s vendor/bin/websocket-start %s", 
-          PHP_BINARY, $this->port
+        "%s ./../Runtimes/websocket-start.php %s", 
+        PHP_BINARY, $this->port
       ), silence: true
     );
 

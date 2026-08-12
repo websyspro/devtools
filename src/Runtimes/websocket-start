@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * WebSocket Server Standalone
+ * 
+ * Inicia apenas o servidor WebSocket.
+ * Usado internamente pelo BrowserReloadHandler para rodar em processo separado.
+ */
+
+defined( "DIR_BASE" ) || define(
+  "DIR_BASE", realpath( 
+    __DIR__ . "/../../../../../"
+  ) . DIRECTORY_SEPARATOR
+);
+
+require DIR_BASE . "vendor/autoload.php";
+use Websyspro\DevTools\WebSocket\Server;
+
+$port = isset($argv[1]) ? (int)$argv[1] : 8080;
+$server = new Server($port);
+$server->start();

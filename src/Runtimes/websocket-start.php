@@ -2,15 +2,16 @@
 <?php
 
 /**
- * WebSocket Server Standalone
+ * WebSocket Server Runtime
  * 
- * Inicia apenas o servidor WebSocket.
- * Usado internamente pelo BrowserReloadHandler para rodar em processo separado.
+ * Runtime interno para iniciar o servidor WebSocket.
+ * Não deve ser exportado como binário do Composer.
+ * Usado pelo BrowserReloadHandler para rodar em processo separado.
  */
 
 defined("DIR_BASE") || define(
   "DIR_BASE", realpath( 
-    __DIR__ . "/../../../../"
+    __DIR__ . "/../../../../../"
   ) . DIRECTORY_SEPARATOR
 );
 

@@ -12,6 +12,7 @@
 namespace Websyspro\DevTools\Shareds;
 
 use RuntimeException;
+use function is_resource;
 
 class Run
 {

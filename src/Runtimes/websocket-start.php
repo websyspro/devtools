@@ -11,13 +11,12 @@
 
 defined( "DIR_BASE" ) || define(
   "DIR_BASE", realpath(
-    dirname( __DIR__, 7 ) 
+    dirname( __DIR__, 5 ) 
   ) . DIRECTORY_SEPARATOR
 );
 
 require DIR_BASE . "vendor/autoload.php";
 use Websyspro\DevTools\WebSocket\Server;
 
-$port = isset($argv[1]) ? (int)$argv[1] : 8081;
-$server = new Server($port);
+$server = new Server( isset($argv[1]) ? (int)$argv[1] : 8081 );
 $server->start();

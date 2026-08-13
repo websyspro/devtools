@@ -14,10 +14,10 @@
 * Update Version Composer
 */
 defined( "DIR_BASE" ) || define(
-  "DIR_BASE", realpath( 
-    __DIR__ . "/../../../../"
-    ) . DIRECTORY_SEPARATOR
-  );
+  "DIR_BASE", realpath(
+    dirname( __DIR__, 5 ) 
+  ) . DIRECTORY_SEPARATOR
+);
   
 require DIR_BASE . "vendor/autoload.php";
 

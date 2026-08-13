@@ -9,9 +9,9 @@
  * para recarregar automaticamente.
  */
 
-defined("DIR_BASE") || define(
-  "DIR_BASE", realpath( 
-    __DIR__ . "/../../../../"
+defined( "DIR_BASE" ) || define(
+  "DIR_BASE", realpath(
+    dirname( __DIR__, 5 ) 
   ) . DIRECTORY_SEPARATOR
 );
 

@@ -42,7 +42,7 @@ class Server
    * @param int $port Porta onde o servidor vai escutar (padrão: 8080)
    */
   public function __construct(
-    int $port = 8080
+    int $port = 8081
   ){
     $this->port = $port;
   }
@@ -95,20 +95,12 @@ class Server
   ): void {
     Terminal::init()
       ->clear()
-      ->text("[WebSocket] Server Started", new Styled(
-        color: [255,200,15], bold: true
-      ))
+      ->text("[WebSocket] Server Started" )
       ->eof()
-      ->text("Listening on ", new Styled(
-        color: [255,255,255]
-      ))
-      ->text("ws://localhost:{$this->port}", new Styled(
-        color: [0,200,0], bold: true
-      ))
+      ->text("Listening on ")
+      ->text("ws://localhost:{$this->port}")
       ->eof()
-      ->text("Waiting for browser connections...", new Styled(
-        color: [150,150,150]
-      ))
+      ->text("Waiting for browser connections...")
       ->eof()
       ->eof();
   }
@@ -162,13 +154,9 @@ class Server
     $this->performHandshake( $client );
 
     Terminal::init()
-      ->text("[WebSocket] ", new Styled(
-        color: [255,200,15]
-      ))
+      ->text("[WebSocket] ")
       ->green("Client connected")
-      ->text(" (Total: " . count($this->clients) . ")", new Styled(
-        color: [150,150,150]
-      ))
+      ->text(" (Total: " . count($this->clients) . ")")
       ->eof();
   }
 
@@ -241,15 +229,9 @@ class Server
       socket_close( $client );
 
       Terminal::init()
-        ->text("[WebSocket] ", new Styled(
-          color: [255,200,15]
-        ))
-        ->text("Client disconnected", new Styled(
-          color: [255,100,100]
-        ))
-        ->text(" (Total: " . count($this->clients) . ")", new Styled(
-          color: [150,150,150]
-        ))
+        ->text("[WebSocket] ")
+        ->text("Client disconnected")
+        ->text(" (Total: " . count($this->clients) . ")")
         ->eof();
     }
   }
@@ -275,15 +257,9 @@ class Server
     }
 
     Terminal::init()
-      ->text("[WebSocket] ", new Styled(
-        color: [255,200,15]
-      ))
-      ->text("Broadcast sent", new Styled(
-        color: [100,150,255]
-      ))
-      ->text(" → {$message}", new Styled(
-        color: [150,150,150]
-      ))
+      ->text("[WebSocket] ")
+      ->text("Broadcast sent")
+      ->text(" → {$message}")
       ->eof();
   }
 

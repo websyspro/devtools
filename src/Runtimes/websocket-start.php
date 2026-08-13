@@ -9,17 +9,15 @@
  * Usado pelo BrowserReloadHandler para rodar em processo separado.
  */
 
-defined("DIR_BASE") || define(
-  "DIR_BASE", realpath( 
-    __DIR__ . "/../../../../../"
+defined( "DIR_BASE" ) || define(
+  "DIR_BASE", realpath(
+    dirname( __DIR__, 7 ) 
   ) . DIRECTORY_SEPARATOR
 );
 
 require DIR_BASE . "vendor/autoload.php";
-
 use Websyspro\DevTools\WebSocket\Server;
 
-$port = isset($argv[1]) ? (int)$argv[1] : 8080;
-
+$port = isset($argv[1]) ? (int)$argv[1] : 8081;
 $server = new Server($port);
 $server->start();

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0149c298b605e6b74c545b96b4c2d44d",
+    "content-hash": "e908a0163d5d38d693785cd88be37a0f",
     "packages": [
         {
             "name": "websyspro/logger",

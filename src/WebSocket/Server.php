@@ -302,12 +302,8 @@ class Server
     }
 
     Terminal::init()
-      ->text("[WebSocket] ", new Styled(
-        color: [255,200,15]
-      ))
-      ->text("Server stopped", new Styled(
-        color: [255,0,0]
-      ))
+      ->text("[WebSocket] ")
+      ->text("Server stopped")
       ->eof();
   }
 }

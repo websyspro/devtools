@@ -106,10 +106,16 @@ class WatchEvents
           continue;
         }
 
+        $shouldExclude = false;
         foreach( $this->excludePatterns as $pattern ){
           if( str_contains( $iterator->getPathname(), DIRECTORY_SEPARATOR . $pattern . DIRECTORY_SEPARATOR ) ){
-            continue 2;
+            $shouldExclude = true;
+            break;
           }
+        }
+
+        if( $shouldExclude ){
+          continue;
         }
 
         $files[ $iterator->getPathname() ] = $iterator->getMTime();
@@ -178,7 +184,7 @@ class WatchEvents
       foreach( $this->filesCurrents as $file => $time ){
         if( isset($this->filesPrevious[$file]) === false ){
           $this->dispatchEvent( DispatchType::Created, $file );
-        } else if( $this->filesPrevious[$file] !== $time ){
+        } elseif( $this->filesPrevious[$file] !== $time ){
           $this->dispatchEvent( DispatchType::Modified, $file );
         }
       }

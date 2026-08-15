@@ -16,7 +16,8 @@ use function sprintf;
  * 
  * @package Websyspro\DevTools\Handlers
  */
-class BrowserReloadHandler implements EventHandler
+class BrowserReloadHandler 
+implements EventHandler
 {
   /**
    * Instância do WatchEvents
@@ -39,9 +40,7 @@ class BrowserReloadHandler implements EventHandler
    */
   public function __construct(
     private int $port = 8080
-  ){
-    // Constructor vazio - WebSocket será iniciado no handle(Started)
-  }
+  ){}
 
   /**
    * Registra a instância do WatchEvents
@@ -66,11 +65,13 @@ class BrowserReloadHandler implements EventHandler
     DispatchType $dispatchType,
     string|null $file = null
   ): void {
-    // Evento Started: Inicia o servidor WebSocket em processo separado
-    if ($dispatchType === DispatchType::Started) {
+    if( $dispatchType === DispatchType::Started ){
       $this->startWebSocketProcess();
       return;
+    } else {
+      echo "fdafsdfds";
     }
+
 
     // Para outros eventos, não faz nada
     // O WebSocket Server que está rodando em processo separado

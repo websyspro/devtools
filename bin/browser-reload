@@ -22,4 +22,4 @@ use Websyspro\DevTools\Handlers\BrowserReloadHandler;
 
 $watcher = new WatchEvents();
 $watcher->registerHandler(new BrowserReloadHandler());
-$watcher->listen(interval: 1);
+$watcher->listen();

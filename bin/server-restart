@@ -26,4 +26,4 @@ use Websyspro\DevTools\Handlers\ServerRestartHandler;
 
 $watcher = new WatchEvents();
 $watcher->registerHandler( handler: new ServerRestartHandler());
-$watcher->listen( interval: 1 );
+$watcher->listen();

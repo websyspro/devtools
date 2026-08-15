@@ -344,8 +344,6 @@ class WatchEvents
    * estado atual dos arquivos com o estado anterior e dispara eventos
    * apropriados (Created, Modified, Deleted).
    * 
-   * @param int $interval Intervalo em segundos entre cada varredura
-   * 
    * @throws RuntimeException Se nenhum diretório foi registrado
    * 
    * @return never Este método nunca retorna (loop infinito)
@@ -361,7 +359,6 @@ class WatchEvents
    * ```
    */
   public function listen(
-    int $interval = 1
   ): never {
     if( empty( $this->directories ) ){
       throw new RuntimeException(
@@ -375,48 +372,28 @@ class WatchEvents
       );
     }
 
-    // Dispara evento Started antes do loop
-    $this->dispatchEvent(
-      DispatchType::Started
-    );
-
     $prev = $this->scan();
+    $this->dispatchEvent( DispatchType::Started );
 
     while( true ){
-      usleep( $interval * 500000 ); // 0.5s em microssegundos
+      sleep( 1 );
 
       $curr = $this->scan();
-
-      $hasChanges = false;
-
       foreach( $curr as $file => $time ){
         if( !isset($prev[$file]) ){
-          $this->dispatchEvent(
-            DispatchType::Created, $file
-          );
-          $hasChanges = true;
+          $this->dispatchEvent( DispatchType::Created, $file );
         } elseif( $prev[$file] !== $time ){
-          $this->dispatchEvent(
-            DispatchType::Modified, $file
-          );
-          $hasChanges = true;
+          $this->dispatchEvent( DispatchType::Modified, $file );
         }
       }
 
       foreach( $prev as $file => $mtime ){
-        if( !isset( $curr[$file] ) ){
-          $this->dispatchEvent(
-            DispatchType::Deleted, $file
-          );
-          $hasChanges = true;
+        if( isset( $curr[$file]) === false ){
+          $this->dispatchEvent( DispatchType::Deleted, $file );
         }
       }      
 
       $prev = $curr;
-
-      if( !$hasChanges ){
-        usleep( $interval * 500000 ); // Espera adicional se não houve mudanças
-      }
     }   
   }
 }

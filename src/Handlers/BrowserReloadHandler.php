@@ -50,27 +50,12 @@ implements EventHandler
       ), silence: true
     );
 
-    // Define document root a partir do watch.json
-    $documentRoot = defined('DIR_BASE') ? DIR_BASE : getcwd();
-    if (isset($this->watchEvents->watchJSON->includes[0])) {
-      $documentRoot .= DIRECTORY_SEPARATOR . $this->watchEvents->watchJSON->includes[0];
-    }
-
-    $routerPath = dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'Runtimes' . DIRECTORY_SEPARATOR . 'http-server-router.php';
-
     $this->httpServerProcess = new Run();
     $this->httpServerProcess->command(
       message: sprintf( 
-        "%s -S localhost:%s -t %s %s", 
-        PHP_BINARY, 
-        $this->httServerPort,
-        $documentRoot,
-        $routerPath
-      ), 
-      silence: true,
-      env: [
-        'WEBSOCKET_PORT' => (string)$this->webSocketPort
-      ]
+        "%s -S localhost:%s -t %s%s %s/Runtimes/http-server-router.php", 
+        PHP_BINARY, $this->httServerPort, DIR_BASE, $this->watchEvents->watchJSON->directoryRoot, dirname(__FILE__, 2)
+      ), silence: true
     );    
 
     sleep(1);

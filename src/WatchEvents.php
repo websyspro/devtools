@@ -10,6 +10,7 @@ use RecursiveIteratorIterator;
 use InvalidArgumentException;
 use FilesystemIterator;
 use RuntimeException;
+use Websyspro\Logger\Terminal;
 use function is_object;
 use function defined;
 use function sprintf;
@@ -172,6 +173,9 @@ class WatchEvents
         "No scripts registered to watch"
       );
     }
+
+    Terminal::init()
+      ->text( "Checou aqui!!!!" );
 
     $this->scanFilesPrevius();
     $this->dispatchEvent(

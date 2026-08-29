@@ -78,12 +78,10 @@ class WatchEvents
       $handler->watch( $this );
     }
 
-    print_r( "....." );
-
-    $this->handlers[ DispatchType::Started->name ][] = $handler;
-    $this->handlers[ DispatchType::Created->name ][] = $handler;
+    $this->handlers[ DispatchType::Started->name  ][] = $handler;
+    $this->handlers[ DispatchType::Created->name  ][] = $handler;
     $this->handlers[ DispatchType::Modified->name ][] = $handler;
-    $this->handlers[ DispatchType::Deleted->name ][] = $handler;
+    $this->handlers[ DispatchType::Deleted->name  ][] = $handler;
   }   
 
   public function on(

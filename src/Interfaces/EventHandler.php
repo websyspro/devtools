@@ -11,7 +11,7 @@ interface EventHandler
     WatchEvents $watchEvents
   ): void;
 
-  public function handle(
+  public function handler(
     DispatchType $dispatchType,
     string|null $file = null
   ): void;

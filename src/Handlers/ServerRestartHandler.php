@@ -31,72 +31,21 @@ use function is_resource;
 class ServerRestartHandler 
 implements EventHandler
 {
-  /**
-   * Instância do WatchEvents para acessar configurações
-   * 
-   * @var WatchEvents
-   */
   private WatchEvents $watchEvents;
-
-  /**
-   * Recurso do processo do servidor em execução
-   * 
-   * @var resource|null
-   */
-  private mixed $serverProcess = null;
-
-  /**
-   * Caminho do script do servidor a executar
-   * 
-   * @var DispatchType
-   */
   private DispatchType $dispatchType;
-
-  /**
-   * Caminho do script do servidor a executar
-   * 
-   * @var string|null
-   */
+  private mixed $serverProcess = null;
   private string|null $file;  
 
-  /**
-   * Construtor do handler
-   * 
-   * Inicializa o handler de reinício do servidor.
-   * 
-   * @return void
-   */
   public function __construct(
   ){}
 
-  /**
-   * Registra a instância do WatchEvents
-   * 
-   * Chamado automaticamente pelo WatchEvents quando o handler é registrado
-   * via registerHandler(). Armazena a referência para acesso às configurações.
-   * 
-   * @param WatchEvents $watchEvents Instância do observador de eventos
-   * 
-   * @return void
-   */
   public function watch(
     WatchEvents $watchEvents
   ): void {
     $this->watchEvents = $watchEvents;
   }
 
-  /**
-   * Manipula eventos de mudança de arquivos
-   * 
-   * Método principal chamado pelo WatchEvents quando um evento ocorre.
-   * Registra o evento no log e reinicia o servidor automaticamente.
-   * 
-   * @param DispatchType $dispatchType Tipo do evento (Started, Created, Modified, Deleted)
-   * @param string|null $file Caminho do arquivo modificado (null para Started)
-   * 
-   * @return void
-   */
-  public function handle(
+  public function handler(
     DispatchType $dispatchType,
     string|null $file = null
   ): void {
@@ -106,15 +55,6 @@ implements EventHandler
     $this->restartServer();
   }
 
-  /**
-   * Inicia o processo do servidor PHP
-   * 
-   * Cria um novo processo para executar o script do servidor definido
-   * no watch.json. Limpa o terminal e exibe cabeçalho informativo antes
-   * de iniciar. Redireciona stdout e stderr para o terminal atual.
-   * 
-   * @return void
-   */
   private function startServer(
   ): void {
     $this->printHeader();

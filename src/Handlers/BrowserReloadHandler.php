@@ -6,11 +6,10 @@ use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;
 use Websyspro\DevTools\Shareds\Run;
-use Websyspro\Logger\Terminal;
 use function sprintf;
 
 class BrowserReloadHandler 
-implements EventHandler
+implements EventHandler 
 {
   private WatchEvents $watchEvents;
   private Run|null $websocketProcess = null;
@@ -25,15 +24,13 @@ implements EventHandler
     $this->watchEvents = $watchEvents;
   }
 
-  public function handle(
+  public function handler(
     DispatchType $dispatchType,
     string|null $file = null
   ): void {
-    if( $dispatchType === DispatchType::Started ){
-      $this->startWebSocketProcess();
-    } else {
-      Terminal::init()->line( $dispatchType->name );
-    }
+    $dispatchType === DispatchType::Started
+      ? $this->startWebSocketProcess()
+      : $this->sendWebSocketProcess();
   }
 
   private function startWebSocketProcess(
@@ -47,5 +44,10 @@ implements EventHandler
     );
 
     sleep(1);
+  }
+
+  private function sendWebSocketProcess(
+  ): void {
+    
   }
 }

@@ -139,8 +139,8 @@ class WatchEvents
     ] ?? [];
 
     foreach( $eventHandlers as $handler ){
-      if( is_object( $handler ) && method_exists( $handler, 'handle' ) ){
-        $handler->handle( $dispatchType, $file );
+      if( is_object( $handler ) && method_exists( $handler, 'handler' ) ){
+        $handler->handler( $dispatchType, $file );
       } elseif( is_callable( $handler )){
         $handler( $dispatchType, $file );
       }
@@ -185,8 +185,6 @@ class WatchEvents
       sleep( 1 );
 
       $this->scanfilesCurrents();
-      var_dump($this->filesPrevious);
-      var_dump($this->filesCurrents);
 
       foreach( $this->filesCurrents as $file => $time ){
         if( isset($this->filesPrevious[$file]) === false ){

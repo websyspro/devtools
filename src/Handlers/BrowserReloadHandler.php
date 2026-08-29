@@ -32,7 +32,6 @@ implements EventHandler
     if( $dispatchType === DispatchType::Started ){
       $this->startWebSocketProcess();
     } else {
-      Terminal::init()->text( $dispatchType->name );
     }
   }
 

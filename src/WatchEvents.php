@@ -181,6 +181,8 @@ class WatchEvents
 
     while( true ){
       sleep( 1 );
+      Terminal::init()
+        ->text( "Init While" );
 
       $this->scanfilesCurrents();
 

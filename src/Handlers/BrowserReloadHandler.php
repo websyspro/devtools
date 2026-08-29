@@ -51,8 +51,8 @@ implements EventHandler
     $this->httpServerProcess = new Run();
     $this->httpServerProcess->command(
       message: sprintf( 
-        "%s -S localhost:%s %s/Runtimes/http-server-router.php", 
-        PHP_BINARY, $this->httServerPort, dirname(__FILE__, 2)
+        "%s -S localhost:%s -t %s/src %s/Runtimes/http-server-router.php", 
+        PHP_BINARY, $this->httServerPort, DIR_BASE, dirname(__FILE__, 2)
       ), silence: true
     );    
 

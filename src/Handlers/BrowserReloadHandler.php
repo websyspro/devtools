@@ -52,8 +52,7 @@ implements EventHandler
     $this->httpServerProcess->command(
       message: sprintf( 
         "%s -S localhost:%s", 
-        PHP_BINARY, dirname(__FILE__, 2), 
-          $this->httServerPort
+          PHP_BINARY, $this->httServerPort
       ), silence: true
     );    
 

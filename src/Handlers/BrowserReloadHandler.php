@@ -19,8 +19,8 @@ implements EventHandler
   private Run|null $httpServerProcess = null;
 
   public function __construct(
-    private int $webSocketPort = Hosts::$webSocketPort,
-    private int $httServerPort = Hosts::$httpServerPort
+    private int $webSocketPort = 3002,
+    private int $httServerPort = 3001
   ){}
 
   public function watch(

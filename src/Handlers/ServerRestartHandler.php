@@ -11,23 +11,6 @@ use Websyspro\Logger\Terminal;
 use function sprintf;
 use function is_resource;
 
-/**
- * ServerRestartHandler - Handler para hot reload de servidores PHP
- * 
- * Implementa reinício automático do servidor PHP quando arquivos são modificados.
- * Gerencia o ciclo de vida do processo do servidor, incluindo inicialização,
- * parada e reinício, com suporte multiplataforma (Windows/Unix).
- * 
- * @package Websyspro\DevTools\Handlers
- * 
- * @example Uso básico
- * ```php
- * $handler = new ServerRestartHandler();
- * $watcher = new WatchEvents();
- * $watcher->registerHandler($handler);
- * $watcher->listen();
- * ```
- */
 class ServerRestartHandler 
 implements EventHandler
 {
@@ -138,14 +121,6 @@ implements EventHandler
     );
   }  
 
-  /**
-   * Exibe cabeçalho informativo no terminal
-   * 
-   * Mostra o nome do sistema, script em execução e timestamp
-   * de início do monitoramento com cores ANSI.
-   * 
-   * @return void
-   */
   private function printHeader(
   ): void {
     Terminal::init()

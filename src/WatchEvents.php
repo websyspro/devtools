@@ -37,7 +37,9 @@ class WatchEvents
 
       if( file_exists( $watchFile )){
         $this->watchJSON = new WatchJSON(
-          ...(array)json_decode( file_get_contents( $watchFile ))
+          ...(array)json_decode(
+            file_get_contents( $watchFile )
+          )
         );
 
         foreach( $this->watchJSON->includes as $include ){
@@ -75,6 +77,8 @@ class WatchEvents
     if( method_exists( $handler, "watch" )){
       $handler->watch( $this );
     }
+
+    print_r( "....." );
 
     $this->handlers[ DispatchType::Started->name ][] = $handler;
     $this->handlers[ DispatchType::Created->name ][] = $handler;

@@ -8,59 +8,22 @@ use Websyspro\DevTools\WatchEvents;
 use Websyspro\DevTools\Shareds\Run;
 use function sprintf;
 
-/**
- * BrowserReloadHandler - Handler para hot reload no navegador
- * 
- * Inicia servidor WebSocket e envia notificações quando arquivos são modificados,
- * fazendo com que os browsers conectados recarreguem automaticamente.
- * 
- * @package Websyspro\DevTools\Handlers
- */
 class BrowserReloadHandler 
 implements EventHandler
 {
-  /**
-   * Instância do WatchEvents
-   * 
-   * @var WatchEvents
-   */
   private WatchEvents $watchEvents;
-
-  /**
-   * Processo do WebSocket rodando em background
-   * 
-   * @var Run|null
-   */
   private Run|null $websocketProcess = null;
 
-  /**
-   * Construtor do handler
-   * 
-   * @param int $port Porta do servidor WebSocket (padrão: 8080)
-   */
   public function __construct(
     private int $port = 8080
   ){}
 
-  /**
-   * Registra a instância do WatchEvents
-   * 
-   * @param WatchEvents $watchEvents Instância do observador de eventos
-   * @return void
-   */
   public function watch(
     WatchEvents $watchEvents
   ): void {
     $this->watchEvents = $watchEvents;
   }
 
-  /**
-   * Manipula eventos de mudança de arquivos
-   * 
-   * @param DispatchType $dispatchType Tipo do evento
-   * @param string|null $file Caminho do arquivo modificado
-   * @return void
-   */
   public function handle(
     DispatchType $dispatchType,
     string|null $file = null
@@ -68,21 +31,9 @@ implements EventHandler
     if( $dispatchType === DispatchType::Started ){
       $this->startWebSocketProcess();
       return;
-    } else {
-      echo "fdafsdfds";
-    }
-
-
-    // Para outros eventos, não faz nada
-    // O WebSocket Server que está rodando em processo separado
-    // vai receber as conexões dos browsers
+    } else {}
   }
 
-  /**
-   * Inicia o servidor WebSocket em processo separado
-   * 
-   * @return void
-   */
   private function startWebSocketProcess(
   ): void {
     $this->websocketProcess = new Run();
@@ -93,7 +44,6 @@ implements EventHandler
       ), silence: true
     );
 
-    // Aguarda WebSocket inicializar
     sleep(1);
   }
 }

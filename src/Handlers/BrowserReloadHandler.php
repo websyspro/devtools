@@ -17,7 +17,8 @@ implements EventHandler
   private Run|null $websocketProcess = null;
 
   public function __construct(
-    private int $port = 8080
+    private int $webSocketPort = 3002,
+    private int $httServerPort = 3001
   ){}
 
   public function watch(
@@ -41,7 +42,7 @@ implements EventHandler
     $this->websocketProcess->command(
       message: sprintf( 
         "%s %s/Runtimes/websocket-start.php %s", 
-        PHP_BINARY, dirname(__FILE__, 2), $this->port
+        PHP_BINARY, dirname(__FILE__, 2), $this->portWebSocket
       ), silence: true
     );
 

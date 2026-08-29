@@ -5,8 +5,10 @@ namespace Websyspro\DevTools\Handlers;
 use Websyspro\DevTools\Consts\Hosts;
 use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
+use Websyspro\DevTools\Interfaces\WatchJSON;
 use Websyspro\DevTools\WatchEvents;
 use Websyspro\DevTools\Shareds\Run;
+use Websyspro\DevTools\WatchFile;
 use function sprintf;
 use function strlen;
 use function chr;
@@ -17,15 +19,11 @@ implements EventHandler
   private WatchEvents $watchEvents;
   private Run|null $webSocketProcess = null;
   private Run|null $httpServerProcess = null;
-  private mixed $watchJSON = null;
 
   public function __construct(
     private int $webSocketPort = 3002,
     private int $httServerPort = 3001
-  ){
-    $this->watchJSON = file_get_contents( DIR_BASE . "watch.json" );
-    print_r( $this->watchJSON );
-  }
+  ){}
 
   public function watch(
     WatchEvents $watchEvents
@@ -55,8 +53,8 @@ implements EventHandler
     $this->httpServerProcess = new Run();
     $this->httpServerProcess->command(
       message: sprintf( 
-        "%s -S localhost:%s -t %ssrc %s/Runtimes/http-server-router.php", 
-        PHP_BINARY, $this->httServerPort, DIR_BASE, dirname(__FILE__, 2)
+        "%s -S localhost:%s -t %s%s %s/Runtimes/http-server-router.php", 
+        PHP_BINARY, $this->httServerPort, DIR_BASE, $this->watchEvents->watchJSON->directoryRoot, dirname(__FILE__, 2)
       ), silence: true
     );    
 

@@ -10,7 +10,6 @@ use RecursiveIteratorIterator;
 use InvalidArgumentException;
 use FilesystemIterator;
 use RuntimeException;
-use Websyspro\Logger\Terminal;
 use function is_object;
 use function defined;
 use function sprintf;

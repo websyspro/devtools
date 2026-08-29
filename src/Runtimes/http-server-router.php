@@ -1,7 +1,5 @@
 <?php
 
-use Websyspro\DevTools\Middlewares\HttpServerRouter;
-
 /**
  * WebSocket Server Runtime
  * 

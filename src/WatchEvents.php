@@ -93,8 +93,10 @@ class WatchEvents
   }  
 
   private function scanFiles(
-    array $files = [],
+    array $files = []
   ): array {
+    clearstatcache();
+
     foreach( $this->directories as $directory ){
       $recursiveIteratorIterators = (
         new RecursiveIteratorIterator(
@@ -145,7 +147,7 @@ class WatchEvents
     }
   }
 
-  private function scanFilesPrevius(
+  private function scanFilesPrevious(
   ): void {
     $this->filesPrevious = $this->scanFiles();
   }
@@ -174,7 +176,7 @@ class WatchEvents
       );
     }
 
-    $this->scanFilesPrevius();
+    $this->scanFilesPrevious();
     $this->dispatchEvent(
       DispatchType::Started
     );

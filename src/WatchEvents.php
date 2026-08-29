@@ -169,7 +169,7 @@ class WatchEvents
       );
     }
 
-    if( empty( $this->watchJSON->script )){
+    if( empty( $this->watchJSON->scriptName )){
       throw new RuntimeException(
         "No scripts registered to watch"
       );

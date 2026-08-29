@@ -15,7 +15,8 @@ class BrowserReloadHandler
 implements EventHandler 
 {
   private WatchEvents $watchEvents;
-  private Run|null $websocketProcess = null;
+  private Run|null $webSocketProcess = null;
+  private Run|null $httpServerProcess = null;
 
   public function __construct(
     private int $webSocketPort = 3002,
@@ -39,13 +40,22 @@ implements EventHandler
 
   private function startWebSocketProcess(
   ): void {
-    $this->websocketProcess = new Run();
-    $this->websocketProcess->command(
+    $this->webSocketProcess = new Run();
+    $this->webSocketProcess->command(
       message: sprintf( 
         "%s %s/Runtimes/websocket-start.php %s", 
         PHP_BINARY, dirname(__FILE__, 2), $this->webSocketPort
       ), silence: true
     );
+
+    $this->httpServerProcess = new Run();
+    $this->httpServerProcess->command(
+      message: sprintf( 
+        "%s -S localhost:%s", 
+        PHP_BINARY, dirname(__FILE__, 2), 
+          $this->httServerPort
+      ), silence: true
+    );    
 
     sleep(1);
   }

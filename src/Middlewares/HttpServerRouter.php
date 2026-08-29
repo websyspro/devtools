@@ -2,16 +2,39 @@
 
 namespace Websyspro\DevTools\Middlewares;
 
+use Websyspro\DevTools\Consts\Hosts;
+use Websyspro\DevTools\Interfaces\WatchJSON;
+
 class HttpServerRouter
 {
   private int $websocketPort;
   private string $documentRoot;
+  private WatchJSON $watchJSON;
 
-  public function __construct()
-  {
-    $this->websocketPort = (int)(getenv('WEBSOCKET_PORT') ?: 8080);
-    $this->documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? getcwd();
+  public function __construct(
+  ){
+    $this->configDefault();
   }
+
+  private function configDefault(
+  ): void {
+    if( defined( "DIR_BASE" )){
+      $watchFile = sprintf(
+        "%swatch.json", DIR_BASE
+      );
+
+      if( file_exists( $watchFile )){
+        $this->watchJSON = new WatchJSON(
+          ...(array)json_decode(
+            file_get_contents( $watchFile )
+          )
+        );
+
+        $this->websocketPort = Hosts::$webSocketPort;
+        $this->documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? getcwd();        
+      }
+    }
+  }  
 
   public function listen(): void
   {
@@ -60,7 +83,7 @@ class HttpServerRouter
 <!-- DevTools: Hot Reload Script -->
 <script>
 (function() {
-    const ws = new WebSocket('ws://localhost:{$this->websocketPort}');
+    const ws = new WebSocket('ws://localhost:{$this->watchJSON->webSocketPort}');
     
     ws.onopen = () => {
         console.log('[DevTools] Hot reload connected');

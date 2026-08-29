@@ -21,8 +21,6 @@ implements EventHandler
   private Run|null $httpServerProcess = null;
 
   public function __construct(
-    private int $webSocketPort = 3002,
-    private int $httServerPort = 3001
   ){}
 
   public function watch(
@@ -46,7 +44,8 @@ implements EventHandler
     $this->webSocketProcess->command(
       message: sprintf( 
         "%s %s/Runtimes/websocket-start.php %s", 
-        PHP_BINARY, dirname(__FILE__, 2), $this->webSocketPort
+        PHP_BINARY, dirname(__FILE__, 2), 
+        $this->watchEvents->watchJSON->webSocketPort
       ), silence: true
     );
 
@@ -54,7 +53,8 @@ implements EventHandler
     $this->httpServerProcess->command(
       message: sprintf( 
         "%s -S localhost:%s -t %s%s %s/Runtimes/http-server-router.php", 
-        PHP_BINARY, $this->httServerPort, DIR_BASE, $this->watchEvents->watchJSON->directoryRoot, dirname(__FILE__, 2)
+        PHP_BINARY, $this->watchEvents->watchJSON->httpServerPort, 
+        DIR_BASE, $this->watchEvents->watchJSON->documentRoot, dirname(__FILE__, 2)
       ), silence: true
     );    
 
@@ -74,7 +74,7 @@ implements EventHandler
     }
 
     $connected = @socket_connect( 
-      $socket, Hosts::$hostname, $this->webSocketPort
+      $socket, Hosts::$hostname, $this->watchEvents->watchJSON->webSocketPort
     );
     
     if( $connected === false ){
@@ -85,7 +85,7 @@ implements EventHandler
     // Realiza handshake WebSocket
     $key = base64_encode( random_bytes(16) );
     $header = "GET / HTTP/1.1\r\n" .
-              "Host: 127.0.0.1:{$this->webSocketPort}\r\n" .
+              "Host: 127.0.0.1:{$this->watchEvents->watchJSON->webSocketPort}\r\n" .
               "Upgrade: websocket\r\n" .
               "Connection: Upgrade\r\n" .
               "Sec-WebSocket-Key: {$key}\r\n" .

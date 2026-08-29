@@ -2,7 +2,7 @@
 
 namespace Websyspro\DevTools\Handlers;
 
-use Websyspro\DevTools\Const\Hosts;
+use Websyspro\DevTools\Consts\Hosts;
 use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;

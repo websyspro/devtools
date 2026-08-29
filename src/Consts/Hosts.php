@@ -1,6 +1,6 @@
 <?php
 
-namespace Websyspro\DevTools\Const;
+namespace Websyspro\DevTools\Consts;
 
 class Hosts
 {

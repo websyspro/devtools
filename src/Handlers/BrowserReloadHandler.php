@@ -6,6 +6,7 @@ use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;
 use Websyspro\DevTools\Shareds\Run;
+use Websyspro\Logger\Terminal;
 use function sprintf;
 
 class BrowserReloadHandler 
@@ -30,8 +31,9 @@ implements EventHandler
   ): void {
     if( $dispatchType === DispatchType::Started ){
       $this->startWebSocketProcess();
-      return;
-    } else {}
+    } else {
+      Terminal::init()->text( $dispatchType->name );
+    }
   }
 
   private function startWebSocketProcess(

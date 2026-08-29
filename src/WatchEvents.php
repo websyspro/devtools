@@ -174,9 +174,6 @@ class WatchEvents
       );
     }
 
-    Terminal::init()
-      ->text( "Checou aqui!!!!" );
-
     $this->scanFilesPrevius();
     $this->dispatchEvent(
       DispatchType::Started

@@ -142,6 +142,21 @@ class Server
       $this->disconnectClient( $client );
       return;
     }
+
+    // Decodifica a mensagem WebSocket
+    $message = $this->decodeFrame( $data );
+    
+    if( $message ){
+      $payload = json_decode( $message, true );
+      
+      // Se receber FileNotification, faz broadcast para todos os clientes
+      if( isset($payload['type']) && $payload['type'] === 'FileNotification' ){
+        $this->broadcast([
+          'type' => 'reload',
+          'message' => 'File changed, reloading...'
+        ]);
+      }
+    }
   }
 
   private function disconnectClient(
@@ -197,6 +212,34 @@ class Server
     }
 
     return $frame . $message;
+  }
+
+  private function decodeFrame(
+    string $data
+  ): string|false {
+    if( strlen( $data ) < 2 ){
+      return false;
+    }
+
+    $length = ord( $data[1] ) & 127;
+    $maskStart = 2;
+    
+    if( $length === 126 ){
+      $maskStart = 4;
+      $length = unpack( 'n', substr( $data, 2, 2 ) )[1];
+    } elseif( $length === 127 ){
+      $maskStart = 10;
+      $length = unpack( 'J', substr( $data, 2, 8 ) )[1];
+    }
+
+    $masks = substr( $data, $maskStart, 4 );
+    $decoded = '';
+    
+    for( $i = 0; $i < $length; $i++ ){
+      $decoded .= $data[ $maskStart + 4 + $i ] ^ $masks[ $i % 4 ];
+    }
+
+    return $decoded;
   }
 
   public function stop(

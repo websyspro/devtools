@@ -17,11 +17,15 @@ implements EventHandler
   private WatchEvents $watchEvents;
   private Run|null $webSocketProcess = null;
   private Run|null $httpServerProcess = null;
+  private mixed $watchJSON = null;
 
   public function __construct(
     private int $webSocketPort = 3002,
     private int $httServerPort = 3001
-  ){}
+  ){
+    $this->watchJSON = file_get_contents( DIR_BASE . "watch.json" );
+    print_r( $this->watchJSON );
+  }
 
   public function watch(
     WatchEvents $watchEvents

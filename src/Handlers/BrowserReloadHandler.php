@@ -29,7 +29,7 @@ implements EventHandler
     $this->watchEvents = $watchEvents;
   }
 
-  public function handle(
+  public function handler(
     DispatchType $dispatchType,
     string|null $file = null
   ): void {

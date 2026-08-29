@@ -29,7 +29,7 @@ implements EventHandler
     $this->watchEvents = $watchEvents;
   }
 
-  public function handler(
+  public function handle(
     DispatchType $dispatchType,
     string|null $file = null
   ): void {
@@ -51,8 +51,8 @@ implements EventHandler
     $this->httpServerProcess = new Run();
     $this->httpServerProcess->command(
       message: sprintf( 
-        "%s -S localhost:%s", 
-          PHP_BINARY, $this->httServerPort
+        "%s -S localhost:%s %s/Runtimes/http-server-router.php", 
+        PHP_BINARY, $this->httServerPort, dirname(__FILE__, 2)
       ), silence: true
     );    
 

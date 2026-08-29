@@ -2,6 +2,7 @@
 
 namespace Websyspro\DevTools\Handlers;
 
+use Websyspro\DevTools\Const\Hosts;
 use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;
@@ -51,14 +52,18 @@ implements EventHandler
 
   private function sendWebSocketProcess(
   ): void {
-    $socket = @socket_create( AF_INET, SOCK_STREAM, SOL_TCP );
+    $socket = @socket_create(
+      AF_INET, 
+      SOCK_STREAM,
+      SOL_TCP
+    );
     
     if( $socket === false ){
       return;
     }
 
     $connected = @socket_connect( 
-      $socket, '127.0.0.1', $this->port
+      $socket, Hosts::$hostname, $this->webSocketPort
     );
     
     if( $connected === false ){
@@ -69,7 +74,7 @@ implements EventHandler
     // Realiza handshake WebSocket
     $key = base64_encode( random_bytes(16) );
     $header = "GET / HTTP/1.1\r\n" .
-              "Host: 127.0.0.1:{$this->port}\r\n" .
+              "Host: 127.0.0.1:{$this->webSocketPort}\r\n" .
               "Upgrade: websocket\r\n" .
               "Connection: Upgrade\r\n" .
               "Sec-WebSocket-Key: {$key}\r\n" .

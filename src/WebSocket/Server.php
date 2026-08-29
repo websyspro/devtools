@@ -2,7 +2,6 @@
 
 namespace Websyspro\DevTools\WebSocket;
 
-use Websyspro\Logger\Terminal;
 use function array_merge;
 use function in_array;
 use function strlen;
@@ -49,16 +48,7 @@ class Server
 
   private function printStartMessage(
   ): void {
-    Terminal::init()
-      ->clear()
-      ->text("[WebSocket] Server Started" )
-      ->eof()
-      ->text("Listening on ")
-      ->text("ws://localhost:{$this->port}")
-      ->eof()
-      ->text("Waiting for browser connections...")
-      ->eof()
-      ->eof();
+    // Server running in background
   }
 
   private function listen(
@@ -85,7 +75,9 @@ class Server
 
   private function acceptConnection(
   ): void {
-    $client = socket_accept( $this->socket );
+    $client = socket_accept(
+      $this->socket
+    );
 
     if( $client === false ){
       return;
@@ -93,20 +85,20 @@ class Server
 
     $this->clients[] = $client;
     $this->performHandshake( $client );
-
-    Terminal::init()
-      ->text("[WebSocket] ")
-      ->green("Client connected")
-      ->text(" (Total: " . count($this->clients) . ")")
-      ->eof();
   }
 
   private function performHandshake(
     $client
   ): void {
-    $request = socket_read( $client, 5000 );
+    $request = socket_read(
+      $client, 5000
+    );
 
-    preg_match( "#Sec-WebSocket-Key: (.*)\r\n#", $request, $matches );
+    preg_match(
+      "#Sec-WebSocket-Key: (.*)\r\n#",
+      $request,
+      $matches
+    );
 
     if( empty( $matches[1] ) ){
       return;
@@ -143,17 +135,15 @@ class Server
       return;
     }
 
-    // Decodifica a mensagem WebSocket
     $message = $this->decodeFrame( $data );
     
     if( $message ){
       $payload = json_decode( $message, true );
       
-      // Se receber FileNotification, faz broadcast para todos os clientes
-      if( isset($payload['type']) && $payload['type'] === 'FileNotification' ){
+      if( isset($payload['type']) && $payload["type"] === "FileNotification" ){
         $this->broadcast([
-          'type' => 'reload',
-          'message' => 'File changed, reloading...'
+          "type" => "reload",
+          "message" => "File changed, reloading..."
         ]);
       }
     }
@@ -167,12 +157,6 @@ class Server
     if( $key !== false ){
       unset( $this->clients[$key] );
       socket_close( $client );
-
-      Terminal::init()
-        ->text("[WebSocket] ")
-        ->text("Client disconnected")
-        ->text(" (Total: " . count($this->clients) . ")")
-        ->eof();
     }
   }
 
@@ -189,12 +173,6 @@ class Server
     foreach( $this->clients as $client ){
       @socket_write( $client, $frame, strlen( $frame ) );
     }
-
-    Terminal::init()
-      ->text("[WebSocket] ")
-      ->text("Broadcast sent")
-      ->text(" → {$message}")
-      ->eof();
   }
 
   private function encodeFrame(
@@ -251,10 +229,5 @@ class Server
     if( $this->socket ){
       socket_close( $this->socket );
     }
-
-    Terminal::init()
-      ->text("[WebSocket] ")
-      ->text("Server stopped")
-      ->eof();
   }
 }

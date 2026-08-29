@@ -181,10 +181,10 @@ class WatchEvents
 
     while( true ){
       sleep( 1 );
-      Terminal::init()
-        ->line( "Init While" );
 
       $this->scanfilesCurrents();
+      var_dump($this->filesPrevious);
+      var_dump($this->filesCurrents);
 
       foreach( $this->filesCurrents as $file => $time ){
         if( isset($this->filesPrevious[$file]) === false ){

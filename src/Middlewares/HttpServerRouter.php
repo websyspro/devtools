@@ -82,7 +82,7 @@ class HttpServerRouter
   ): string {
     $baseDir = dirname( __DIR__, 1 );
     $baseDirScriptReload = sprintf(
-      "%s/Scripts/relaod.js", $baseDir
+      "%s/Scripts/reload.js", $baseDir
     );
 
     if( file_exists( $baseDirScriptReload ) === false ){

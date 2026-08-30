@@ -94,19 +94,26 @@ class Server
       $client, 5000
     );
 
+    if( $request === false ){
+      error_log( "[WebSocket] Failed to read handshake request" );
+      return;
+    }
+
     preg_match(
-      "#Sec-WebSocket-Key: (.*)\r\n#",
+      "#Sec-WebSocket-Key:\s*(.+?)\s*\r\n#i",
       $request,
       $matches
     );
 
     if( empty( $matches[1] ) ){
+      error_log( "[WebSocket] Sec-WebSocket-Key not found in request" );
+      error_log( "[WebSocket] Request headers: " . substr($request, 0, 500) );
       return;
     }
 
-    $key = $matches[1];
+    $key = trim( $matches[1] );
     $acceptKey = base64_encode(
-      sha1( "{$key}258EAFA5-E914-47DA-95CA-C5AB0DC85B11", true )
+      sha1( $key . "258EAFA5-E914-47DA-95CA-C5AB0DC85B11", true )
     );
 
     $response = "HTTP/1.1 101 Switching Protocols\r\n" .
@@ -114,10 +121,17 @@ class Server
                 "Connection: Upgrade\r\n" .
                 "Sec-WebSocket-Accept: {$acceptKey}\r\n\r\n";
 
-    socket_write(
+    $written = socket_write(
       $client, 
-      $response
+      $response,
+      strlen( $response )
     );
+
+    if( $written === false ){
+      error_log( "[WebSocket] Failed to write handshake response" );
+    } else {
+      error_log( "[WebSocket] Handshake successful for client" );
+    }
   }
 
   private function handleClient(

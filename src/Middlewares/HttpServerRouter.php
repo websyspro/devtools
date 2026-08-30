@@ -91,7 +91,7 @@ class HttpServerRouter
 
     return str_ireplace(
       "</body>", sprintf(
-        "%s\n</body>", file_get_contents(
+        "\n<script>\n%s\n</script>\n</body>", file_get_contents(
           $baseDirScriptReload
         )
       ), $content

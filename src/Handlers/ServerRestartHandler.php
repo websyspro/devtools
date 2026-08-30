@@ -12,7 +12,7 @@ use function sprintf;
 use function is_resource;
 
 class ServerRestartHandler 
-implements EventHandler
+extends EventHandler
 {
   private WatchEvents $watchEvents;
   private DispatchType $dispatchType;
@@ -43,7 +43,7 @@ implements EventHandler
     $this->printHeader();
 
     $cmd = sprintf( "%s %s", 
-      PHP_BINARY, $this->watchEvents->watchJSON->script
+      PHP_BINARY, $this->watchEvents->watchJSON->scriptName
     );
 
     $descriptors = [

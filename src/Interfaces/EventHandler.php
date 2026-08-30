@@ -5,14 +5,14 @@ namespace Websyspro\DevTools\Interfaces;
 use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\WatchEvents;
 
-interface EventHandler
+abstract class EventHandler
 {
   public function watch(
     WatchEvents $watchEvents
-  ): void;
+  ): void {}
 
   public function handler(
     DispatchType $dispatchType,
     string|null $file = null
-  ): void;
+  ): void {}
 }

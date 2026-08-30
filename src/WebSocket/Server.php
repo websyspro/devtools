@@ -69,7 +69,10 @@ class Server
   private function listen(
   ): never {
     while( true ){
-      $read = array_merge( [$this->socket], $this->clients );
+      $read = array_merge([
+        $this->socket
+      ], $this->clients );
+      
       $write = null;
       $except = null;
 
@@ -95,9 +98,13 @@ class Server
     );
 
     if( $client === false ){
+      $errorCode = socket_last_error( $this->socket );
+      $errorMsg = socket_strerror( $errorCode );
+      error_log( "[WebSocket] Failed to accept connection: {$errorMsg}" );
       return;
     }
 
+    error_log( "[WebSocket] New connection accepted" );
     $this->clients[] = $client;
     $this->performHandshake( $client );
   }
@@ -114,6 +121,9 @@ class Server
       return;
     }
 
+    // Log da requisição completa para debug
+    error_log( "[WebSocket] Handshake request received:\n" . substr($request, 0, 800) );
+
     preg_match(
       "#Sec-WebSocket-Key:\s*(.+?)\s*\r\n#i",
       $request,
@@ -122,7 +132,6 @@ class Server
 
     if( empty( $matches[1] ) ){
       error_log( "[WebSocket] Sec-WebSocket-Key not found in request" );
-      error_log( "[WebSocket] Request headers: " . substr($request, 0, 500) );
       return;
     }
 
@@ -131,10 +140,27 @@ class Server
       sha1( $key . "258EAFA5-E914-47DA-95CA-C5AB0DC85B11", true )
     );
 
+    // Extrai Origin se presente (para CORS)
+    $origin = '';
+    if( preg_match( "#Origin:\s*(.+?)\s*\r\n#i", $request, $originMatch ) ){
+      $origin = trim( $originMatch[1] );
+    }
+
+    // Monta a resposta com suporte a CORS
     $response = "HTTP/1.1 101 Switching Protocols\r\n" .
                 "Upgrade: websocket\r\n" .
                 "Connection: Upgrade\r\n" .
-                "Sec-WebSocket-Accept: {$acceptKey}\r\n\r\n";
+                "Sec-WebSocket-Accept: {$acceptKey}\r\n";
+    
+    // Adiciona Origin se foi enviado pelo cliente
+    if( !empty( $origin ) ){
+      $response .= "Sec-WebSocket-Origin: {$origin}\r\n";
+      $response .= "Access-Control-Allow-Origin: {$origin}\r\n";
+    }
+    
+    $response .= "\r\n";
+
+    error_log( "[WebSocket] Sending handshake response (length: " . strlen($response) . ")" );
 
     $written = socket_write(
       $client, 
@@ -143,9 +169,11 @@ class Server
     );
 
     if( $written === false ){
-      error_log( "[WebSocket] Failed to write handshake response" );
+      $errorCode = socket_last_error( $client );
+      $errorMsg = socket_strerror( $errorCode );
+      error_log( "[WebSocket] Failed to write handshake response: {$errorMsg}" );
     } else {
-      error_log( "[WebSocket] Handshake successful for client" );
+      error_log( "[WebSocket] Handshake successful - {$written} bytes written" );
     }
   }
 

@@ -3,7 +3,7 @@
 
   function connect() {
     const webSocket = new WebSocket(
-      "ws://localhost:3001"
+      "ws://localhost:3002"
     );
 
     webSocket.addEventListener( "open", () => {

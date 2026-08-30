@@ -18,6 +18,10 @@ class HttpServerRouter
 
   private function configDefault(
   ): void {
+    // Pega porta do WebSocket da variável de ambiente ou usa 8080 como padrão
+    $this->websocketPort = (int)(getenv('WEBSOCKET_PORT') ?: 8080);
+    $this->documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? getcwd();
+    
     if( defined( "DIR_BASE" )){
       $watchFile = sprintf(
         "%swatch.json", DIR_BASE
@@ -28,10 +32,7 @@ class HttpServerRouter
           ...(array)json_decode(
             file_get_contents( $watchFile )
           )
-        );
-
-        $this->websocketPort = Hosts::$webSocketPort;
-        $this->documentRoot = $_SERVER['DOCUMENT_ROOT'] ?? getcwd();        
+        );      
       }
     }
   }  
@@ -83,7 +84,7 @@ class HttpServerRouter
 <!-- DevTools: Hot Reload Script -->
 <script>
 (function() {
-    const ws = new WebSocket('ws://localhost:{$this->watchJSON->webSocketPort}');
+    const ws = new WebSocket('ws://localhost:{$this->websocketPort}');
     
     ws.onopen = () => {
         console.log('[DevTools] Hot reload connected');

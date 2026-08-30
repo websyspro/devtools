@@ -2,8 +2,8 @@
 
 namespace Websyspro\DevTools\Middlewares;
 
-use Websyspro\DevTools\Consts\Hosts;
 use Websyspro\DevTools\Interfaces\WatchJSON;
+use function sprintf;
 
 class HttpServerRouter
 {
@@ -77,43 +77,24 @@ class HttpServerRouter
     echo $content;
   }
 
-  private function injectReloadScript(string $content): string
-  {
-    $script = <<<HTML
+  private function injectReloadScript(
+    string $content
+  ): string {
+    $baseDir = dirname( __DIR__, 1 );
+    $baseDirScriptReload = sprintf(
+      "%s/Scripts/relaod.js", $baseDir
+    );
 
-<!-- DevTools: Hot Reload Script -->
-<script>
-(function() {
-    const ws = new WebSocket('ws://localhost:{$this->websocketPort}');
-    
-    ws.onopen = () => {
-        console.log('[DevTools] Hot reload connected');
-    };
-    
-    ws.onmessage = (event) => {
-        try {
-            const data = JSON.parse(event.data);
-            if (data.type === 'reload') {
-                console.log('[DevTools] File changed, reloading...');
-                location.reload();
-            }
-        } catch (e) {
-            console.error('[DevTools] Error parsing message:', e);
-        }
-    };
-    
-    ws.onerror = (error) => {
-        console.error('[DevTools] WebSocket error:', error);
-    };
-    
-    ws.onclose = () => {
-        console.log('[DevTools] Connection closed, retrying in 2s...');
-        setTimeout(() => location.reload(), 2000);
-    };
-})();
-</script>
-HTML;
+    if( file_exists( $baseDirScriptReload ) === false ){
+      return $content;
+    }
 
-    return str_ireplace('</body>', $script . "\n</body>", $content);
+    return str_ireplace(
+      "</body>", sprintf(
+        "%s\n</body>", file_get_contents(
+          $baseDirScriptReload
+        )
+      ), $content
+    );
   }
 }

@@ -18,5 +18,5 @@ defined( "DIR_BASE" ) || define(
 require DIR_BASE . "vendor/autoload.php";
 use Websyspro\DevTools\WebSocket\Server;
 
-$server = new Server( isset($argv[1]) ? (int)$argv[1] : 8081 );
+$server = new Server();
 $server->start();

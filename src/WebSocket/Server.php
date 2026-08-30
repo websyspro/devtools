@@ -12,13 +12,9 @@ class Server
 {
   private $socket = null;
   private array $clients = [];
-  private int $port;
 
   public function __construct(
-    int $port = 8081
-  ){
-    $this->port = $port;
-  }
+  ){}
 
   public function start(
   ): never {
@@ -38,7 +34,7 @@ class Server
     );
 
     socket_bind(
-      $this->socket, '0.0.0.0', $this->port
+      $this->socket, '0.0.0.0', "3001"
     );
 
     socket_listen(

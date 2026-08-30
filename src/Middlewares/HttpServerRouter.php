@@ -85,7 +85,7 @@ class HttpServerRouter
       "%s/Scripts/reload.js", $baseDir
     );
 
-    if( file_exists( $baseDirScriptReload ) === false ){
+    if( !file_exists( $baseDirScriptReload )){
       return $content;
     }
 

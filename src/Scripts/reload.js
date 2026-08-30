@@ -2,8 +2,7 @@
   let reconnectDelay = 1000;
   const wsUrls = [
     "ws://localhost:3002",
-    "ws://127.0.0.1:3002",
-    "ws://0.0.0.0:3002"
+    "ws://127.0.0.1:3002"
   ];
   let currentUrlIndex = 0;
 

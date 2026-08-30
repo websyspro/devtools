@@ -2,6 +2,7 @@
 
 namespace Websyspro\DevTools\WebSocket;
 
+use Websyspro\DevTools\Interfaces\WatchJSON;
 use function array_merge;
 use function in_array;
 use function strlen;
@@ -10,11 +11,29 @@ use function ord;
 
 class Server
 {
+  public WatchJSON $watchJSON;
   private $socket = null;
   private array $clients = [];
 
   public function __construct(
-  ){}
+  ){
+    $this->configDefault();
+  }
+
+  private function configDefault(
+  ): void {
+    if( defined( "DIR_BASE" )){
+      $watchFile = sprintf(
+        "%swatch.json", DIR_BASE
+      );
+
+      if( file_exists( $watchFile )){
+        $this->watchJSON = new WatchJSON(
+          ...(array)json_decode( file_get_contents( $watchFile ))
+        );
+      }
+    }
+  }  
 
   public function start(
   ): never {
@@ -34,7 +53,7 @@ class Server
     );
 
     socket_bind(
-      $this->socket, '0.0.0.0', "3001"
+      $this->socket, "0.0.0.0", $this->watchJSON->webSocketPort
     );
 
     socket_listen(

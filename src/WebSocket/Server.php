@@ -1,6 +1,14 @@
 <?php
 
+namespace Websyspro\DevTools\WebSocket;
+
 use Websyspro\DevTools\Interfaces\WatchJSON;
+use RuntimeException;
+use Socket;
+
+use function sprintf;
+use function strlen;
+use function ord;
 
 class Server
 {

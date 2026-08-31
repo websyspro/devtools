@@ -2,6 +2,8 @@
 
 namespace Websyspro\DevTools\Middlewares;
 
+use Exception;
+use Throwable;
 use Websyspro\DevTools\Interfaces\WatchJSON;
 use function defined;
 use function sprintf;
@@ -174,11 +176,41 @@ class HttpServerRouter
     );
   }
 
+  private function throwableError(
+    Throwable $throwable    
+  ): string {
+    return implode( PHP_EOL, [
+      "<!DOCTYPE html>",
+      "<html lang=\"en\">",
+      "<head>",
+        "<meta charset=\"UTF-8\">",
+        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
+        "<title>Error</title>",
+        "<link rel=\"stylesheet\" href=\"./css.css\" />",
+      "</head>",
+      "<body>",
+        sprintf( "<pre><strong>%s</strong>\n%s:%d</pre>",
+          htmlspecialchars( $throwable->getMessage()),
+          htmlspecialchars( $throwable->getFile()), $throwable->getLine()
+        ),
+      "</body>",  
+      "</html>"
+    ]);
+  }
+
   private function extractContent(
   ): string {
     ob_start();
-    require $this->realFilePath;
-    return $this->addScriptHotReload( ob_get_clean());
+
+    try {
+      require $this->realFilePath;
+      return $this->addScriptHotReload( ob_get_clean());
+    } catch( Throwable $throwable ){
+      ob_end_clean();
+      return $this->addScriptHotReload(
+        $this->throwableError( $throwable)
+      );
+    }
   }
 
   private function readFileStatic(

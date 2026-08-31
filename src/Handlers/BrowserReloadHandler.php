@@ -60,46 +60,44 @@ extends EventHandler
 
   private function sendWebSocketProcess(
   ): void {
-    $socket = @socket_create(
-      AF_INET, 
-      SOCK_STREAM,
-      SOL_TCP
+    $handlerHost = $this->watchEvents->watchJSON->webSocketHost;
+    $handlerPort = $this->watchEvents->watchJSON->webSocketPort;
+
+    $handler = @socket_create(
+      AF_INET, SOCK_STREAM, SOL_TCP
     );
     
-    if( $socket === false ){
+    if( !$handler ){
       return;
     }
 
-    $connected = @socket_connect( 
-      $socket, Hosts::$hostname, $this->watchEvents->watchJSON->webSocketPort
+    $handlerConected = @socket_connect( 
+      $handler, $handlerHost, $handlerPort
     );
     
-    if( $connected === false ){
-      socket_close( $socket );
+    if( $handlerConected === false ){
+      socket_close( $handler );
       return;
     }
 
-    // Realiza handshake WebSocket
     $key = base64_encode( random_bytes(16) );
-    $header = "GET / HTTP/1.1\r\n" .
-              "Host: 127.0.0.1:{$this->watchEvents->watchJSON->webSocketPort}\r\n" .
-              "Upgrade: websocket\r\n" .
-              "Connection: Upgrade\r\n" .
-              "Sec-WebSocket-Key: {$key}\r\n" .
-              "Sec-WebSocket-Version: 13\r\n\r\n";
+    $handlerResponse = implode(
+      "\r\n", [
+        "GET / HTTP/1.1",
+        "Host: 127.0.0.1:{$handlerPort}",
+        "Upgrade: websocket",
+        "Connection: Upgrade",
+        "Sec-WebSocket-Key: {$key}",
+        "Sec-WebSocket-Version: 13",
+        "\r\n"
+      ]
+    );
 
-    socket_write( $socket, $header );
-    socket_read( $socket, 2048 );
+    socket_write( $handler, $handlerResponse );
+    socket_read( $handler, 2048 );
 
-    // Envia mensagem de notificação
-    $message = json_encode([
-      'type' => 'FileNotification',
-      'timestamp' => time()
-    ]);
-
-    $frame = $this->encodeWebSocketFrame( $message );
-    socket_write( $socket, $frame );
-    socket_close( $socket );
+    socket_write( $handler, $this->encodeWebSocketFrame( "notification-client" ) );
+    socket_close( $handler );
   }
 
   private function encodeWebSocketFrame(

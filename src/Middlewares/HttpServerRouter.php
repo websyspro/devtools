@@ -3,6 +3,7 @@
 namespace Websyspro\DevTools\Middlewares;
 
 use Exception;
+use RuntimeException;
 use Throwable;
 use Websyspro\DevTools\Interfaces\WatchJSON;
 use function defined;
@@ -10,13 +11,11 @@ use function sprintf;
 
 class HttpServerRouter
 {
-  private int $httpServerPort;
   private string $documentRoot;
   private string $requestUri;
   private string|null $realFilePath;
   private string|null $realFilePathExt;
   private string|null $contentType;
-  private string|null $content;
 
   public function __construct(
   ){
@@ -54,30 +53,40 @@ class HttpServerRouter
 
   private function configDefault(
   ): void {
-    if( defined( "DIR_BASE" )){
-      $watchFile = sprintf(
-        "%swatch.json", DIR_BASE
+    if( !defined( "DIR_BASE" )){
+      throw new RuntimeException(
+        "DIR_BASE is not defined"
       );
-
-      if( file_exists( $watchFile )){
-        $watchJSON = new WatchJSON(
-          ...(array)json_decode(
-            file_get_contents( $watchFile )
-          )
-        );
-
-        if( $watchJSON instanceof WatchJSON ){
-          $this->httpServerPort = $watchJSON->httpServerPort;
-          
-          [ $this->documentRoot, $this->requestUri ] = [
-            $_SERVER[ "DOCUMENT_ROOT" ] ?? getcwd(), 
-            $_SERVER[ "REQUEST_URI" ]
-          ];
-
-          $this->realFilePath = $this->realFilePath();
-        }
-      }
     }
+
+    $watchFile = sprintf(
+      "%swatch.json", DIR_BASE
+    );
+
+    if( !file_exists( $watchFile )){
+      throw new RuntimeException(
+        "watch.json not found: {$watchFile}"
+      );
+    }    
+
+    $watchJSON = new WatchJSON(
+      ...(array)json_decode(
+        file_get_contents( $watchFile )
+      )
+    );
+
+    if( !($watchJSON instanceof WatchJSON) ){
+      throw new RuntimeException(
+        "Invalid watch.json structure"
+      );
+    }
+
+    [ $this->documentRoot, $this->requestUri ] = [
+      $_SERVER[ "DOCUMENT_ROOT" ] ?? getcwd(), 
+      $_SERVER[ "REQUEST_URI" ]
+    ];
+
+    $this->realFilePath = $this->realFilePath();
   }
 
   private function realFilePathExt(
@@ -207,6 +216,8 @@ class HttpServerRouter
       return $this->addScriptHotReload( ob_get_clean());
     } catch( Throwable $throwable ){
       ob_end_clean();
+
+      http_response_code(500);
       return $this->addScriptHotReload(
         $this->throwableError( $throwable)
       );
@@ -221,7 +232,6 @@ class HttpServerRouter
 
   private function readFileNotStatic(
   ): void {
-    $this->content = $this->extractContent();
-    exit( $this->content );
+    exit( $this->extractContent() );
   }
 }

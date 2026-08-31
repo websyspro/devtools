@@ -82,8 +82,9 @@ class HttpServerRouter
     }
 
     [ $this->documentRoot, $this->requestUri ] = [
-      $_SERVER[ "DOCUMENT_ROOT" ] ?? getcwd(), 
-      $_SERVER[ "REQUEST_URI" ]
+      $_SERVER[ "DOCUMENT_ROOT" ] ?? getcwd(), parse_url(
+        $_SERVER[ "REQUEST_URI" ], PHP_URL_PATH
+      )
     ];
 
     $this->realFilePath = $this->realFilePath();

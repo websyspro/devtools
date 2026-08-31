@@ -40,4 +40,7 @@ class HttpServerRouter
 
     print_r($this);
   }   
+
+  public function listen(
+  ): void {}
 }

@@ -41,9 +41,8 @@ extends EventHandler
     $this->webSocketProcess = new Run();
     $this->webSocketProcess->command(
       message: sprintf( 
-        "%s %s/Runtimes/websocket-start.php %s", 
-        PHP_BINARY, dirname(__FILE__, 2), 
-        $this->watchEvents->watchJSON->webSocketPort
+        "%s %s/Runtimes/websocket-start.php", 
+        PHP_BINARY, dirname(__FILE__, 2)
       ), silence: true
     );
 

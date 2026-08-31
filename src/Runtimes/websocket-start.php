@@ -20,4 +20,4 @@ require DIR_BASE . "vendor/autoload.php";
 use Websyspro\DevTools\WebSocket\Server;
 
 $server = new Server();
-$server->start();
+$server->listen();

@@ -9,6 +9,7 @@ use Socket;
 use function sprintf;
 use function strlen;
 use function ord;
+use function chr;
 
 class Server
 {
@@ -33,7 +34,7 @@ class Server
           ...(array)json_decode(
             file_get_contents( $watchFile )
           )
-        );      
+        );
       }
     }
   }  
@@ -74,7 +75,6 @@ class Server
     }
 
     socket_set_nonblock( $this->handler );
-
     $this->started();
   }
 

@@ -65,34 +65,32 @@ extends EventHandler
       AF_INET, SOCK_STREAM, SOL_TCP
     );
     
-    if( $handler === false ){
-      return;
-    }
-
-    $handlerConected = @socket_connect( 
-      $handler, Hosts::$hostname, $handlerPort
-    );
-    
-    if( $handlerConected === false ){
-      socket_close( $handler );
-    } else {
-      $handlerKey = base64_encode( random_bytes(16) );
-      $handlerResponse = implode(
-        "\r\n", [
-          "GET / HTTP/1.1",
-          "Host: 127.0.0.1:{$handlerPort}",
-          "Upgrade: websocket",
-          "Connection: Upgrade",
-          "Sec-WebSocket-Key: {$handlerKey}",
-          "Sec-WebSocket-Version: 13",
-          "\r\n"
-        ]
+    if( $handler ){
+      $handlerConected = @socket_connect( 
+        $handler, Hosts::$hostname, $handlerPort
       );
+      
+      if( $handlerConected === false ){
+        socket_close( $handler );
+      } else {
+        $handlerKey = base64_encode( random_bytes(16) );
+        $handlerResponse = implode(
+          "\r\n", [
+            "GET / HTTP/1.1",
+            "Host: 127.0.0.1:{$handlerPort}",
+            "Upgrade: websocket",
+            "Connection: Upgrade",
+            "Sec-WebSocket-Key: {$handlerKey}",
+            "Sec-WebSocket-Version: 13",
+            "\r\n"
+          ]
+        );
 
-      socket_write( $handler, $handlerResponse );
-      socket_read( $handler, 2048 );
-      socket_write( $handler, $this->encodeWebSocketFrame( "notification-client" ) );
-      socket_close( $handler );
+        socket_write( $handler, $handlerResponse );
+        socket_read( $handler, 2048 );
+        socket_write( $handler, $this->encodeWebSocketFrame( "notification-client" ) );
+        socket_close( $handler );
+      }
     }
   }
 

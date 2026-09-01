@@ -7,6 +7,7 @@ use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;
 use Websyspro\DevTools\Shareds\Run;
+use Websyspro\Package\Terminal;
 use function sprintf;
 use function strlen;
 use function chr;
@@ -56,7 +57,15 @@ extends EventHandler
     );    
 
     sleep(1);
+
+    $this->headerTerminal();
   }
+
+  private function headerTerminal(
+  ): void {
+    Terminal::init()
+      ->line( "DevTools v1 / Browser Reloader" );
+  }  
 
   private function sendWebSocketProcess(
   ): void {

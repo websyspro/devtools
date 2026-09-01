@@ -64,7 +64,7 @@ extends EventHandler
   private function headerTerminal(
   ): void {
     Terminal::init()
-      ->line( "DevTools v1 - " )
+      ->text( "DevTools v1 - " )
       ->yellow( "Browser Reloader" )
       ->line()
       ->text( " - Local:" )

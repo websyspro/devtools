@@ -66,6 +66,7 @@ extends EventHandler
     Terminal::init()
       ->line( "DevTools v1 - " )
       ->yellow( "Browser Reloader" )
+      ->line()
       ->text( " - Local:" )
       ->spc()
       ->cyan( "http://localhost:{$this->watchEvents->watchJSON->httpServerPort}" )

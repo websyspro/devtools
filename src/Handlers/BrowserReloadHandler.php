@@ -64,10 +64,13 @@ extends EventHandler
   private function headerTerminal(
   ): void {
     Terminal::init()
-      ->line( "DevTools v1 / Browser Reloader" )
-      ->text( "Local:" )
+      ->line( "DevTools v1 - " )
+      ->yellow( "Browser Reloader" )
+      ->text( " - Local:" )
       ->spc()
-      ->cyan( "http://localhost:{$this->watchEvents->watchJSON->httpServerPort}" );
+      ->cyan( "http://localhost:{$this->watchEvents->watchJSON->httpServerPort}" )
+      ->line()
+      ->cursorHide();
   }  
 
   private function sendWebSocketProcess(

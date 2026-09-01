@@ -7,6 +7,7 @@ use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;
 use Websyspro\DevTools\Shareds\Run;
+use Websyspro\Logger\Styled;
 use Websyspro\Logger\Terminal;
 use function sprintf;
 use function strlen;
@@ -147,6 +148,15 @@ extends EventHandler
   ): void {
     Terminal::init()
       ->cursorPosition(4)
-      ->text( sprintf( "%s %s - %s", $dispatchType->name, $file, date("Y-m-d H:i:s") ));
+      ->text( sprintf( " %s ", $dispatchType->name ), match( $dispatchType ){
+          DispatchType::Created  => new Styled([255,255,255], [0,200, 50], true),
+          DispatchType::Modified => new Styled([255,255,255], [0,100, 130], true),
+          DispatchType::Deleted  => new Styled([255,255,255], [200,0, 0], true),
+            default => null
+        }
+      )
+      ->spc()
+      ->brightWhite( $file )
+      ->text( sprintf( " - %s", date( "d/m/Y h:i:s" )));
   }
 }

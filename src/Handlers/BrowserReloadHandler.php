@@ -34,7 +34,7 @@ extends EventHandler
   ): void {
     $dispatchType === DispatchType::Started
       ? $this->startWebSocketProcess()
-      : $this->sendWebSocketProcess();
+      : $this->sendWebSocketProcess( $dispatchType, $file );
   }
 
   private function startWebSocketProcess(
@@ -64,17 +64,18 @@ extends EventHandler
   private function headerTerminal(
   ): void {
     Terminal::init()
-      ->text( "DevTools v1 - " )
-      ->yellow( "Browser Reloader" )
+      ->text( "DevTools v1.0.0 - " )
+      ->yellow( "Browser Reloader" )->line()
+      ->text( " - Local:" )->spc()
+      ->green( "http://localhost:{$this->watchEvents->watchJSON->httpServerPort}" )
       ->line()
-      ->text( " - Local:" )
-      ->spc()
-      ->cyan( "http://localhost:{$this->watchEvents->watchJSON->httpServerPort}" )
       ->line()
       ->cursorHide();
   }  
 
   private function sendWebSocketProcess(
+    DispatchType $dispatchType,
+    string|null $file = null
   ): void {
     $handlerPort = $this->watchEvents->watchJSON->webSocketPort;
     $handler = @socket_create(
@@ -106,6 +107,10 @@ extends EventHandler
         socket_read( $handler, 2048 );
         socket_write( $handler, $this->encodeWebSocketFrame( "notification-client" ) );
         socket_close( $handler );
+
+        $this->bodyTerminal(
+          $dispatchType, $file
+        );
       }
     }
   }
@@ -134,5 +139,14 @@ extends EventHandler
     }
 
     return $frame;
+  }
+
+  private function bodyTerminal(
+    DispatchType $dispatchType,
+    string|null $file = null
+  ): void {
+    Terminal::init()
+      ->cursorPosition(4)
+      ->text( sprintf( "%s %s - %s", $dispatchType->name, $file, date("Y-m-d H:i:s") ));
   }
 }

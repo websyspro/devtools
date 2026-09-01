@@ -7,7 +7,7 @@ use Websyspro\DevTools\Enums\DispatchType;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\WatchEvents;
 use Websyspro\DevTools\Shareds\Run;
-use Websyspro\Package\Terminal;
+use Websyspro\Logger\Terminal;
 use function sprintf;
 use function strlen;
 use function chr;
@@ -64,7 +64,10 @@ extends EventHandler
   private function headerTerminal(
   ): void {
     Terminal::init()
-      ->line( "DevTools v1 / Browser Reloader" );
+      ->line( "DevTools v1 / Browser Reloader" )
+      ->text( "Local:" )
+      ->spc()
+      ->cyan( "http://localhost:{$this->watchEvents->watchJSON->httpServerPort}" );
   }  
 
   private function sendWebSocketProcess(

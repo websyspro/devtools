@@ -102,22 +102,28 @@ class HttpServerRouter
       );
     }
 
-    $envs = new Collection(
-      file( sprintf( 
-        "%s.env", DIR_BASE
-      ))
+    $envFile = sprintf( 
+      "%s.env", DIR_BASE
     );
 
-    $envs = $envs->where( fn(string $line) => preg_match( "#^(\#|;)#", $line) === 0 );
-    $envs = $envs->where( fn(string $line) => empty( trim( $line )) === false );
-    $envs = $envs->mapper( fn(string $line) => explode( "=", $line ));
-    $envs = $envs->mapper( function( array $env ){
-      [ $key, $val ] = $env;
+    if( file_exists( $envFile )){
+      $envs = new Collection(
+        file( sprintf( 
+          "%s.env", DIR_BASE
+        ))
+      );
 
-      putenv( sprintf(
-        "%s=%s", trim( $key ), trim( $val, " \t\n\r\0\x0B\"'" )
-      ));
-    });    
+      $envs = $envs->where( fn(string $line) => preg_match( "#^(\#|;)#", $line) === 0 );
+      $envs = $envs->where( fn(string $line) => empty( trim( $line )) === false );
+      $envs = $envs->mapper( fn(string $line) => explode( "=", $line ));
+      $envs = $envs->mapper( function( array $env ){
+        [ $key, $val ] = $env;
+
+        putenv( sprintf(
+          "%s=%s", trim( $key ), trim( $val, " \t\n\r\0\x0B\"'" )
+        ));
+      });    
+    }
   }
 
   private function realFilePathExt(

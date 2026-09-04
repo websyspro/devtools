@@ -2,10 +2,10 @@
 
 namespace Websyspro\DevTools\Middlewares;
 
-use Exception;
+use Websyspro\DevTools\Interfaces\DevTools;
 use RuntimeException;
 use Throwable;
-use Websyspro\DevTools\Interfaces\WatchJSON;
+
 use function defined;
 use function sprintf;
 
@@ -59,23 +59,18 @@ class HttpServerRouter
       );
     }
 
-    $watchFile = sprintf(
-      "%swatch.json", DIR_BASE
+    $devTools = sprintf(
+      "%sdevTools.php", DIR_BASE
     );
 
-    if( !file_exists( $watchFile )){
+    if( !file_exists( $devTools )){
       throw new RuntimeException(
-        "watch.json not found: {$watchFile}"
+        "devTools.php not found: {$devTools}"
       );
     }    
 
-    $watchJSON = new WatchJSON(
-      ...(array)json_decode(
-        file_get_contents( $watchFile )
-      )
-    );
-
-    if( !($watchJSON instanceof WatchJSON) ){
+    $devTools = require $devTools;
+    if( !($devTools instanceof DevTools) ){
       throw new RuntimeException(
         "Invalid watch.json structure"
       );
@@ -219,7 +214,6 @@ class HttpServerRouter
       return $this->addScriptHotReload( ob_get_clean());
     } catch( Throwable $throwable ){
       ob_end_clean();
-
       http_response_code(500);
       return $this->addScriptHotReload(
         $this->throwableError( $throwable)

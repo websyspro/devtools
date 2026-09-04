@@ -2,10 +2,11 @@
 
 namespace Websyspro\DevTools\WebSocket;
 
-use Websyspro\DevTools\Interfaces\WatchJSON;
+use Websyspro\DevTools\Interfaces\DevTools;
 use RuntimeException;
 use Socket;
 
+use function defined;
 use function sprintf;
 use function strlen;
 use function ord;
@@ -15,7 +16,7 @@ class Server
 {
   private array $clients = [];
   private Socket $handler;
-  private WatchJSON $watchJSON;
+  private DevTools $devTools;
 
   public function __construct(
   ){
@@ -25,16 +26,12 @@ class Server
   private function configDefault(
   ): void {
     if( defined( "DIR_BASE" )){
-      $watchFile = sprintf(
-        "%swatch.json", DIR_BASE
+      $devTools = sprintf(
+        "%sdevTools.php", DIR_BASE
       );
 
-      if( file_exists( $watchFile )){
-        $this->watchJSON = new WatchJSON(
-          ...(array)json_decode(
-            file_get_contents( $watchFile )
-          )
-        );
+      if( file_exists( $devTools )){
+        $this->devTools = require $devTools;
       }
     }
   }  
@@ -58,8 +55,8 @@ class Server
 
     $handlerBind = socket_bind(
       $this->handler, 
-      $this->watchJSON->webSocketHost, 
-      $this->watchJSON->webSocketPort
+      $this->devTools->webSocketHost, 
+      $this->devTools->webSocketPort
     );
 
     if( $handlerBind === false ){

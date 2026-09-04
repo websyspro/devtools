@@ -43,7 +43,7 @@ extends EventHandler
     $this->printHeader();
 
     $cmd = sprintf( "%s %s", 
-      PHP_BINARY, $this->watchEvents->watchJSON->scriptName
+      PHP_BINARY, $this->watchEvents->devTools->scriptName
     );
 
     $descriptors = [
@@ -67,29 +67,12 @@ extends EventHandler
     $this->serverProcess = $process;
   }
 
-  /**
-   * Reinicia o servidor PHP
-   * 
-   * Para o servidor atual (se estiver rodando) e inicia um novo processo.
-   * Método chamado automaticamente quando mudanças são detectadas.
-   * 
-   * @return void
-   */
   private function restartServer(
   ): void {
     $this->stopServer();
     $this->startServer();
   }  
 
-  /**
-   * Para o processo do servidor em execução
-   * 
-   * Envia sinal de término ao processo do servidor de forma adequada
-   * ao sistema operacional (taskkill no Windows, kill no Unix).
-   * Aguarda 1 segundo após o término para garantir liberação de recursos.
-   * 
-   * @return void
-   */
   private function stopServer(
   ): void {
     if( !is_resource( $this->serverProcess ) ){

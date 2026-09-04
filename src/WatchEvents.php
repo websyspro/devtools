@@ -2,8 +2,8 @@
 
 namespace Websyspro\DevTools;
 
+use Websyspro\DevTools\Interfaces\DevTools;
 use Websyspro\DevTools\Interfaces\EventHandler;
-use Websyspro\DevTools\Interfaces\WatchJSON;
 use Websyspro\DevTools\Enums\DispatchType;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -21,7 +21,7 @@ class WatchEvents
   private array $excludePatterns = [];
   private array $filesPrevious = [];
   private array $filesCurrents = [];
-  public WatchJSON $watchJSON;
+  public DevTools $devTools;
 
   public function __construct(
   ){
@@ -31,22 +31,18 @@ class WatchEvents
   private function configDefault(
   ): void {
     if( defined( "DIR_BASE" )){
-      $watchFile = sprintf(
-        "%swatch.json", DIR_BASE
+      $devTools = sprintf(
+        "%sdevTools.php", DIR_BASE
       );
 
-      if( file_exists( $watchFile )){
-        $this->watchJSON = new WatchJSON(
-          ...(array)json_decode(
-            file_get_contents( $watchFile )
-          )
-        );
+      if( file_exists( $devTools )){
+        $this->devTools = require $devTools;
 
-        foreach( $this->watchJSON->includes as $include ){
+        foreach( $this->devTools->includes as $include ){
           $this->registerDirectory( $include );
         }
 
-        foreach( $this->watchJSON->excludes as $exclude ){
+        foreach( $this->devTools->excludes as $exclude ){
           $this->excludePattern( $exclude );
         }
       }

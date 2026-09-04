@@ -101,11 +101,13 @@ class HttpServerRouter
       return null;
     }
 
-    [ $this->contentType ] = [
-      $this->listMimiTypes()[
-        $extension
-      ]
-    ];
+    if( isset( $this->listMimiTypes()[$extension] )){
+      [ $this->contentType ] = [
+        $this->listMimiTypes()[
+          $extension
+        ]
+      ];
+    }
 
     return strtolower(
       $extension

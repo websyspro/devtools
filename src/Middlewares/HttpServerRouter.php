@@ -20,6 +20,7 @@ class HttpServerRouter
   public function __construct(
   ){
     $this->configDefault();
+    $this->configInitial();
   }
 
   public function listen(
@@ -83,6 +84,11 @@ class HttpServerRouter
     ];
 
     $this->realFilePath = $this->realFilePath();
+  }
+
+  private function configInitial(
+  ): void {
+    
   }
 
   private function realFilePathExt(

@@ -90,17 +90,25 @@ class HttpServerRouter
   }
 
   private function configInitial(
+    int $errorReportingList = 0
   ): void {
-    if( empty( $this->devTools->errorReporting) === false ){
-      $errorReporting = array_map( 
-        fn( ErrorReporting $errorReporting ) => $errorReporting->name,
-          $this->devTools->errorReporting 
-      );
+    if( empty( $this->devTools->errorReporting ) === false ){
+      foreach( $this->devTools->errorReporting as $errorReporting ){
+        $errorReportingList |= $errorReporting;
+      }
 
       error_reporting( 
-        implode( "|", $errorReporting )
+        $errorReportingList
       );
     }
+
+    var_dump($errorReportingList);
+    var_dump(E_ERROR);
+    var_dump(error_reporting());
+
+    error_reporting($errorReportingList);
+
+    var_dump(error_reporting());    
 
     $envFile = sprintf( 
       "%s.env", DIR_BASE

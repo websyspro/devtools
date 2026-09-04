@@ -102,14 +102,6 @@ class HttpServerRouter
       );
     }
 
-    var_dump($errorReportingList);
-    var_dump(E_ERROR);
-    var_dump(error_reporting());
-
-    error_reporting($errorReportingList);
-
-    var_dump(error_reporting());    
-
     $envFile = sprintf( 
       "%s.env", DIR_BASE
     );

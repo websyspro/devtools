@@ -13,7 +13,7 @@ class DevTools
     public readonly string $webSocketPort,
     public readonly string $httpServerPort,
     public readonly string $documentRoot,
-    public readonly ErrorReporting $errorReporting,
+    public readonly array $errorReporting,
     public readonly string $scriptName
   ){}
 }

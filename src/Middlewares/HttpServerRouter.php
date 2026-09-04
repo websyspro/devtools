@@ -2,6 +2,7 @@
 
 namespace Websyspro\DevTools\Middlewares;
 
+use Websyspro\DevTools\Enums\ErrorReporting;
 use Websyspro\DevTools\Interfaces\DevTools;
 use RuntimeException;
 use Throwable;
@@ -16,6 +17,7 @@ class HttpServerRouter
   private string|null $realFilePath;
   private string|null $realFilePathExt;
   private string|null $contentType;
+  private DevTools $devTools;
 
   public function __construct(
   ){
@@ -70,8 +72,8 @@ class HttpServerRouter
       );
     }    
 
-    $devTools = require $devTools;
-    if( !($devTools instanceof DevTools) ){
+    $this->devTools = require $devTools;
+    if( !($this->devTools instanceof DevTools) ){
       throw new RuntimeException(
         "Invalid watch.json structure"
       );
@@ -88,7 +90,16 @@ class HttpServerRouter
 
   private function configInitial(
   ): void {
-    
+    if( empty( $this->devTools->errorReporting) === false ){
+      $errorReporting = array_map( 
+        fn( ErrorReporting $errorReporting ) => $errorReporting->name,
+          $this->devTools->errorReporting 
+      );
+
+      error_reporting( 
+        implode( "|", $errorReporting )
+      );
+    }
   }
 
   private function realFilePathExt(

@@ -46,11 +46,13 @@ if( $devTools instanceof DevTools ){
       if( $requestHandler->requestTarget->pathInfos->isStatic()){
         $requestHandler->requestTarget->pathInfos->handlerStaticResponse();
       } else {
+        ob_start();
+        
         try {
-          ob_start();
           require_once $requestHandler->requestTarget->pathInfos->file->name;
-          exit( ob_get_contents());
+          exit( ob_get_clean());
         } catch ( Throwable $throwable ){
+          ob_get_clean();
           $httpServerRouter->error( $throwable );
         }
       }

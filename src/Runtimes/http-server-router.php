@@ -50,7 +50,7 @@ if( $devTools instanceof DevTools ){
         
         try {
           require_once $requestHandler->requestTarget->pathInfos->file->name;
-          exit( ob_get_clean());
+          exit( $httpServerRouter->addHotReload( ob_get_clean()));
         } catch ( Throwable $throwable ){
           ob_get_clean();
           $httpServerRouter->error( $throwable );

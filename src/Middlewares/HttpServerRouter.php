@@ -80,6 +80,26 @@ class HttpServerRouter
     string $dir
   ): bool {
     return file_exists( $dir );
+  }
+  
+  public function addHotReload(
+    string $content
+  ): string {
+    $baseDirScriptReload = sprintf(
+      "%s/Scripts/reload.js", dirname( __DIR__, 1 )
+    );
+
+    if( !file_exists( $baseDirScriptReload )){
+      return $content;
+    }
+
+    return str_ireplace(
+      "</body>", sprintf(
+        "\n<script>\n%s\n</script>\n</body>", file_get_contents(
+          $baseDirScriptReload
+        )
+      ), $content
+    );
   }  
 
   public function handlerResponse(

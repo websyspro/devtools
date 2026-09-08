@@ -2,8 +2,6 @@
 
 namespace Websyspro\DevTools\Interfaces;
 
-use Websyspro\DevTools\Enums\ErrorReporting;
-
 class DevTools
 {
   public function __construct(

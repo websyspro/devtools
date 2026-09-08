@@ -8,14 +8,38 @@
  * Usado pelo BrowserReloadHandler para rodar em processo separado.
  */
 
-defined( "DIR_BASE" ) || define(
-  "DIR_BASE", realpath(
+defined( "DevTools_Base_Dir" ) || define(
+  "DevTools_Base_Dir", realpath(
     dirname( __DIR__, 5 ) 
   ) . DIRECTORY_SEPARATOR
 );
 
-require DIR_BASE . "vendor/autoload.php";
+require_once DevTools_Base_Dir . "vendor/autoload.php";
 use Websyspro\DevTools\Middlewares\HttpServerRouter;
+use Websyspro\DevTools\Objects\RequestHandler;
 
-$httpServerRouter = new HttpServerRouter();
-$httpServerRouter->listen();
+$httpServerRouter = new HttpServerRouter(
+  directorys: [ "core", "public" ], 
+  friendlyUrl: true 
+);
+
+$handlerResponse = $httpServerRouter->handlerResponse();
+if( $handlerResponse->empty() === false ){
+  [ $requestHandler ] = $handlerResponse->toArray();
+
+  if( $requestHandler instanceof RequestHandler ){
+    if( $requestHandler->requestTarget->pathInfos->isStatic()){
+      $requestHandler->requestTarget->pathInfos->handlerStaticResponse();
+    } else {
+      try {
+        ob_start();
+        require_once $requestHandler->requestTarget->pathInfos->file->name;
+        exit( ob_get_contents());
+      } catch ( Throwable $throwable ){
+        $httpServerRouter->error( $throwable );
+      }
+    }
+  }
+} else {
+  $httpServerRouter->notFound();
+}

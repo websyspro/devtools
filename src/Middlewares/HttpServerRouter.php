@@ -2,274 +2,132 @@
 
 namespace Websyspro\DevTools\Middlewares;
 
-use Websyspro\DevTools\Enums\ErrorReporting;
-use Websyspro\DevTools\Interfaces\DevTools;
-use RuntimeException;
 use Throwable;
-
+use Websyspro\DevTools\Objects\RequestHandler;
+use Websyspro\DevTools\Responses\NotFound;
+use Websyspro\DevTools\Responses\Error;
+use Websyspro\DevTools\Enums\FileExist;
 use Websyspro\Utils\Collection;
 use function defined;
 use function sprintf;
 
 class HttpServerRouter
 {
-  private string $documentRoot;
-  private string $requestUri;
-  private string|null $realFilePath;
-  private string|null $realFilePathExt;
-  private string|null $contentType;
-  private DevTools $devTools;
+  public string $uri;
+
+  public Collection $dirs;
 
   public function __construct(
+    private array $directorys = [],
+    private bool $friendlyUrl = false
   ){
-    $this->configDefault();
-    $this->configInitial();
+    $this->handlerEnvs();
+    $this->handlerSession();
   }
 
-  public function listen(
+  public function handlerEnvs(
   ): void {
-    if( $this->isStaticFile() ){
-      $this->readFileStatic();
-    } else {
-      $this->readFileNotStatic();
-    }
-  }
-
-  private function listMimiTypes(
-  ): array {
-    return [
-      "css"  => "text/css",
-      "js"   => "application/javascript",
-      "json" => "application/json",
-      "png"  => "image/png",
-      "jpg"  => "image/jpeg",
-      "jpeg" => "image/jpeg",
-      "gif"  => "image/gif",
-      "svg"  => "image/svg+xml",
-      "ico"  => "image/x-icon",
-      "woff" => "font/woff",
-      "woff2"=> "font/woff2",
-      "ttf"  => "font/ttf",
-      "eot"  => "application/vnd.ms-fontobject",
-      "map"  => "application/json",
-    ];
-  }
-
-  private function configDefault(
-  ): void {
-    if( !defined( "DIR_BASE" )){
-      throw new RuntimeException(
-        "DIR_BASE is not defined"
+    if( defined( "DevTools_Base_Dir" )){
+      $dotEnvsPath = sprintf(
+        "%s%s", DevTools_Base_Dir, ".env"
       );
-    }
 
-    $devTools = sprintf(
-      "%sdevTools.php", DIR_BASE
-    );
+      if( file_exists( $dotEnvsPath )){
+        $dotEnvs = new Collection(
+          file( $dotEnvsPath )
+        );
 
-    if( !file_exists( $devTools )){
-      throw new RuntimeException(
-        "devTools.php not found: {$devTools}"
-      );
-    }    
+        $dotEnvs = $dotEnvs->where( 
+          fn(string $line) => (
+            preg_match( "#^(\#|;)#", $line) === 0 
+            && empty( trim( $line )) === false
+          )
+        );
 
-    $this->devTools = require $devTools;
-    if( !($this->devTools instanceof DevTools) ){
-      throw new RuntimeException(
-        "Invalid watch.json structure"
-      );
-    }
+        $dotEnvs = $dotEnvs->mapper( 
+          function( string $env ){
+            [ $key, $txt ] = explode( "=", $env );
 
-    [ $this->documentRoot, $this->requestUri ] = [
-      $_SERVER[ "DOCUMENT_ROOT" ] ?? getcwd(), parse_url(
-        $_SERVER[ "REQUEST_URI" ], PHP_URL_PATH
-      )
-    ];
-
-    $this->realFilePath = $this->realFilePath();
-  }
-
-  private function configInitial(
-    int $errorReportingList = 0
-  ): void {
-    if( empty( $this->devTools->errorReporting ) === false ){
-      foreach( $this->devTools->errorReporting as $errorReporting ){
-        $errorReportingList |= $errorReporting;
+            putenv( sprintf(
+              "%s=%s", trim( $key ), trim(
+                $txt, " \t\n\r\0\x0B\"'"
+              )
+            ));
+          }
+        );        
       }
-
-      error_reporting( 
-        $errorReportingList
-      );
-    }
-
-    $envFile = sprintf( 
-      "%s.env", DIR_BASE
-    );
-
-    if( file_exists( $envFile )){
-      $envs = new Collection(
-        file( sprintf( 
-          "%s.env", DIR_BASE
-        ))
-      );
-
-      $envs = $envs->where( fn(string $line) => preg_match( "#^(\#|;)#", $line) === 0 );
-      $envs = $envs->where( fn(string $line) => empty( trim( $line )) === false );
-      $envs = $envs->mapper( fn(string $line) => explode( "=", $line ));
-      $envs = $envs->mapper( function( array $env ){
-        [ $key, $val ] = $env;
-
-        putenv( sprintf(
-          "%s=%s", trim( $key ), trim( $val, " \t\n\r\0\x0B\"'" )
-        ));
-      });    
     }
   }
 
-  private function realFilePathExt(
-    string $realFilePath
-  ): string|null {
-    $extension = pathinfo( 
-      $realFilePath, PATHINFO_EXTENSION 
+  private function handlerSession(
+  ): void {
+    $this->uri = parse_url(
+      $_SERVER[ "REQUEST_URI" ], PHP_URL_PATH
     );
-
-    if( empty( $extension )){
-      return null;
-    }
-
-    if( isset( $this->listMimiTypes()[$extension] )){
-      [ $this->contentType ] = [
-        $this->listMimiTypes()[
-          $extension
-        ]
-      ];
-    }
-
-    return strtolower(
-      $extension
+    
+    $_SERVER = array_merge(
+      $_SERVER, [ "PHP_SELF", $this->uri ]
     );
   }
 
-  private function realFilePathExtExists(
-  ): bool {
-    return $this->realFilePathExt !== null;
-  }
-
-  private function isStaticFile(
-  ): bool {
-    return isset(
-      $this->listMimiTypes()[
-        $this->realFilePathExt
-      ]
-    );
-  }
-
-  private function defaultIndex(
-    string $path
+  private function defineRealPath(
+    string $dir
   ): string {
-    return sprintf( "%s%sindex.php",
-      rtrim( $path, "\\\/" ), DIRECTORY_SEPARATOR
-    );
+    return sprintf( "%s%s", DevTools_Base_Dir, $dir );
   }
 
-  private function defaultIndexExists(
-    string $path
+  private function defineRealPathExist(
+    string $dir
   ): bool {
-    return file_exists(
-      $this->defaultIndex( $path )
-    );
+    return file_exists( $dir );
   }  
 
-  private function realFilePath(
-  ): string {
-    $realFilePath = preg_replace(
-      [ "#/#", "#\\\#" ], DIRECTORY_SEPARATOR, sprintf(
-        "%s%s", $this->documentRoot, $this->requestUri 
+  public function handlerResponse(
+    Collection $routers = new Collection()
+  ): Collection {
+    $routers = new Collection(
+      items: $this->directorys
+    );
+
+    $routers = $routers->mapper( 
+      fn: fn( string $directory ): string => (
+        $this->defineRealPath( $directory )
       )
     );
 
-    [ $this->realFilePathExt ] = [
-      $this->realFilePathExt(
-        $realFilePath
+    $routers = $routers->where(
+      fn: fn( string $directory ): bool => (
+        $this->defineRealPathExist( $directory )
       )
-    ];
-
-    if( $this->realFilePathExtExists() === false ){
-      if( $this->defaultIndexExists( $realFilePath ) === true ){
-        return $this->defaultIndex( $realFilePath );
-      }
-    }
-
-    return $realFilePath;
-  }
-
-  private function addScriptHotReload(
-    string $content
-  ): string {
-    $baseDir = dirname( __DIR__, 1 );
-    $baseDirScriptReload = sprintf(
-      "%s/Scripts/reload.js", $baseDir
     );
 
-    if( !file_exists( $baseDirScriptReload )){
-      return $content;
-    }
-
-    return str_ireplace(
-      "</body>", sprintf(
-        "\n<script>\n%s\n</script>\n</body>", file_get_contents(
-          $baseDirScriptReload
+    $routers = $routers->mapper( 
+      fn: fn( string $directory ): RequestHandler => (
+        new RequestHandler(
+          uri: $this->uri, 
+          friendlyUrl: $this->friendlyUrl, 
+          directory: $directory 
         )
-      ), $content
+      )
+    );
+
+    return $routers->where(
+      fn: fn( RequestHandler $requestHandler ): bool => (
+        $requestHandler->requestTarget->pathInfos->fileExist === FileExist::Yes
+      )
     );
   }
 
-  private function throwableError(
-    Throwable $throwable    
-  ): string {
-    return implode( PHP_EOL, [
-      "<!DOCTYPE html>",
-      "<html lang=\"en\">",
-      "<head>",
-        "<meta charset=\"UTF-8\">",
-        "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
-        "<title>Error</title>",
-        "<link rel=\"stylesheet\" href=\"./css.css\" />",
-      "</head>",
-      "<body>",
-        sprintf( "<pre><strong>%s</strong>\n%s:%d</pre>",
-          htmlspecialchars( $throwable->getMessage()),
-          htmlspecialchars( $throwable->getFile()), $throwable->getLine()
-        ),
-      "</body>",  
-      "</html>"
-    ]);
-  }
-
-  private function extractContent(
-  ): string {
-    ob_start();
-
-    try {
-      require $this->realFilePath;
-      return $this->addScriptHotReload( ob_get_clean());
-    } catch( Throwable $throwable ){
-      ob_end_clean();
-      http_response_code(500);
-      return $this->addScriptHotReload(
-        $this->throwableError( $throwable)
-      );
-    }
-  }
-
-  private function readFileStatic(
+  public function notFound(
   ): void {
-    header( "Content-Type: {$this->contentType}" );
-    readfile( $this->realFilePath );
+    http_response_code( 404 );
+    exit( NotFound::html());
   }
 
-  private function readFileNotStatic(
+  public function error(
+    Throwable $throwable
   ): void {
-    exit( $this->extractContent() );
-  }
+    http_response_code( 501 );
+    exit( Error::html( $throwable ));
+  }  
 }

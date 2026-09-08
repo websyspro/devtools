@@ -9,13 +9,13 @@
  * Usado pelo BrowserReloadHandler para rodar em processo separado.
  */
 
-defined( "DIR_BASE" ) || define(
-  "DIR_BASE", realpath(
+defined( "DevTools_Base_Dir" ) || define(
+  "DevTools_Base_Dir", realpath(
     dirname( __DIR__, 5 ) 
   ) . DIRECTORY_SEPARATOR
 );
 
-require DIR_BASE . "vendor/autoload.php";
+require DevTools_Base_Dir . "vendor/autoload.php";
 
 use Websyspro\DevTools\WebSocket\Server;
 

@@ -13,13 +13,13 @@
 /*
 * Update Version Composer
 */
-defined( "DIR_BASE" ) || define(
-  "DIR_BASE", realpath(
+defined( "DevTools_Base_Dir" ) || define(
+  "DevTools_Base_Dir", realpath(
     dirname( __DIR__, 4 ) 
   ) . DIRECTORY_SEPARATOR
 );
   
-require DIR_BASE . "vendor/autoload.php";
+require DevTools_Base_Dir . "vendor/autoload.php";
 
 use Websyspro\DevTools\WatchEvents;
 use Websyspro\DevTools\Handlers\ServerRestartHandler;

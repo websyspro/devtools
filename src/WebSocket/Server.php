@@ -25,9 +25,9 @@ class Server
 
   private function configDefault(
   ): void {
-    if( defined( "DIR_BASE" )){
+    if( defined( "DevTools_Base_Dir" )){
       $devTools = sprintf(
-        "%sdevTools.php", DIR_BASE
+        "%sdevTools.php", DevTools_Base_Dir
       );
 
       if( file_exists( $devTools )){

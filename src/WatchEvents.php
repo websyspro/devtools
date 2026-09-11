@@ -108,7 +108,11 @@ class WatchEvents
 
         $shouldExclude = false;
         foreach( $this->excludePatterns as $pattern ){
-          if( str_contains( $iterator->getPathname(), DIRECTORY_SEPARATOR . $pattern . DIRECTORY_SEPARATOR ) ){
+          $pattern = sprintf( "%s%s%s", DIRECTORY_SEPARATOR, str_replace(
+            [ "\\", "/" ], DIRECTORY_SEPARATOR, $pattern
+          ), DIRECTORY_SEPARATOR );
+
+          if( str_contains( $iterator->getPathname(), $pattern )){
             $shouldExclude = true;
             break;
           }

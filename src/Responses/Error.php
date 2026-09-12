@@ -12,13 +12,13 @@ class Error
     return implode(
       PHP_EOL, [
         "<!DOCTYPE html>",
-        "<html lang=\"en\">",
+        "<html>",
         "<head>",
           "<meta charset=\"UTF-8\">",
           "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">",
           "<title>Error</title>",
         "</head>",
-        "<body>",
+        "<body style=\"background-color:rgb(235,235,235); padding: 24px;\">",
           "<strong>Error:</strong> {$throwable->getMessage()}<br/>",
           "<strong>File:</strong> {$throwable->getFile()}<br/>",
           "<strong>Line:</strong> {$throwable->getLine()}",

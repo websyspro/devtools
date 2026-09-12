@@ -141,13 +141,13 @@ class HttpServerRouter
   public function notFound(
   ): void {
     http_response_code( 404 );
-    exit( NotFound::html());
+    exit( $this->addHotReload( NotFound::html()));
   }
 
   public function error(
     Throwable $throwable
   ): void {
     http_response_code( 501 );
-    exit( Error::html( $throwable ));
+    exit( $this->addHotReload( Error::html( $throwable )));
   }  
 }

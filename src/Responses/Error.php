@@ -19,7 +19,9 @@ class Error
           "<title>Error</title>",
         "</head>",
         "<body>",
-          "{$throwable->getMessage()}",
+          "<strong>Error:</strong> {$throwable->getMessage()}<br/>",
+          "<strong>File:</strong> {$throwable->getFile()}<br/>",
+          "<strong>Line:</strong> {$throwable->getLine()}",
         "</body>",
         "</html>"
       ]

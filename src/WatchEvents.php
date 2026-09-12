@@ -39,7 +39,9 @@ class WatchEvents
         $this->devTools = require $devTools;
 
         foreach( $this->devTools->includes as $include ){
-          $this->registerDirectory( $include );
+          $this->registerDirectory(
+            $include === "/" ? DevTools_Base_Dir : $include
+          );
         }
 
         foreach( $this->devTools->excludes as $exclude ){

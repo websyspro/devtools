@@ -169,12 +169,6 @@ class WatchEvents
       );
     }
 
-    if( empty( $this->devTools->scriptName )){
-      throw new RuntimeException(
-        "No scripts registered to watch"
-      );
-    }
-
     $this->scanFilesPrevious();
     $this->dispatchEvent(
       DispatchType::Started

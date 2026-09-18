@@ -9,13 +9,13 @@
  * para recarregar automaticamente.
  */
 
-defined( "DevTools_Base_Dir" ) || define(
-  "DevTools_Base_Dir", realpath(
+defined( "BASE_DIR" ) || define(
+  "BASE_DIR", realpath(
     dirname( __DIR__, 4 ) 
   ) . DIRECTORY_SEPARATOR
 );
 
-require DevTools_Base_Dir . "vendor/autoload.php";
+require BASE_DIR . "vendor/autoload.php";
 
 use Websyspro\DevTools\WatchEvents;
 use Websyspro\DevTools\Handlers\BrowserReloadHandler;

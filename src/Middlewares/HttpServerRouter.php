@@ -27,9 +27,9 @@ class HttpServerRouter
 
   public function handlerEnvs(
   ): void {
-    if( defined( "DevTools_Base_Dir" )){
+    if( defined( "BASE_DIR" )){
       $dotEnvsPath = sprintf(
-        "%s%s", DevTools_Base_Dir, ".env"
+        "%s%s", BASE_DIR, ".env"
       );
 
       if( file_exists( $dotEnvsPath )){
@@ -73,7 +73,7 @@ class HttpServerRouter
   private function defineRealPath(
     string $dir
   ): string {
-    return sprintf( "%s%s", DevTools_Base_Dir, $dir );
+    return sprintf( "%s%s", BASE_DIR, $dir );
   }
 
   private function defineRealPathExist(

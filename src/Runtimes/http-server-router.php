@@ -7,8 +7,8 @@
  * Não deve ser exportado como binário do Composer.
  * Usado pelo BrowserReloadHandler para rodar em processo separado.
  */
-defined( "DevTools_Base_Dir" ) || define(
-  "DevTools_Base_Dir", realpath(
+defined( "BASE_DIR" ) || define(
+  "BASE_DIR", realpath(
     dirname( __DIR__, 5 ) 
   ) . DIRECTORY_SEPARATOR
 );
@@ -17,7 +17,7 @@ defined( "DevTools_Base_Dir" ) || define(
 /*
  * Load Autoload
  * */
-require_once DevTools_Base_Dir . "vendor/autoload.php";
+require_once BASE_DIR . "vendor/autoload.php";
 use Websyspro\DevTools\Middlewares\HttpServerRouter;
 use Websyspro\DevTools\Objects\RequestHandler;
 use Websyspro\DevTools\Interfaces\DevTools;
@@ -25,7 +25,7 @@ use Websyspro\DevTools\Interfaces\DevTools;
 /**
  * Load devTools
  */
-$devTools = require_once DevTools_Base_Dir . "devTools.php";
+$devTools = require_once BASE_DIR . "devTools.php";
 
 /**
  * Validação devTools

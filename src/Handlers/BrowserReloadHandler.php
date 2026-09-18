@@ -61,7 +61,7 @@ extends EventHandler
     //   message: sprintf( 
     //     "%s -S localhost:%s -t %s%s %s/Runtimes/http-server-router.php", 
     //     PHP_BINARY, $this->watchEvents->devTools->httpServerPort, 
-    //     DevTools_Base_Dir, $this->watchEvents->devTools->documentRoot, dirname(__FILE__, 2)
+    //     BASE_DIR, $this->watchEvents->devTools->documentRoot, dirname(__FILE__, 2)
     //   ), silence: true
     // );    
 

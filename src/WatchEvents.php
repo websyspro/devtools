@@ -32,7 +32,7 @@ class WatchEvents
   ): void {
     if( defined( "BASE_DIR" )){
       $devTools = sprintf(
-        "%dev-tools.php", BASE_DIR
+        "%s\dev-tools.php", BASE_DIR
       );
 
       if( file_exists( $devTools )){

@@ -27,7 +27,7 @@ class Server
   ): void {
     if( defined( "BASE_DIR" )){
       $devTools = sprintf(
-        "%sdevTools.php", BASE_DIR
+        "%sdev-tools.php", BASE_DIR
       );
 
       if( file_exists( $devTools )){

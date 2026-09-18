@@ -25,7 +25,7 @@ use Websyspro\DevTools\Interfaces\DevTools;
 /**
  * Load devTools
  */
-$devTools = require_once BASE_DIR . "devTools.php";
+$devTools = require_once BASE_DIR . "dev-tools.php";
 
 /**
  * Validação devTools

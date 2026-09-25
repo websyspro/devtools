@@ -52,21 +52,11 @@ extends EventHandler
     $this->httpServerProcess->command(
       message: sprintf( 
         "%s -S localhost:%s %s/Runtimes/http-server-router.php", 
-        PHP_BINARY, $this->watchEvents->devTools->httpServerPort, dirname(__FILE__, 2)
+        PHP_BINARY, $this->watchEvents->serverJson->httpServerPort, dirname(__FILE__, 2)
       ), silence: true
-    );    
-
-    // $this->httpServerProcess = new Run();
-    // $this->httpServerProcess->command(
-    //   message: sprintf( 
-    //     "%s -S localhost:%s -t %s%s %s/Runtimes/http-server-router.php", 
-    //     PHP_BINARY, $this->watchEvents->devTools->httpServerPort, 
-    //     BASE_DIR, $this->watchEvents->devTools->documentRoot, dirname(__FILE__, 2)
-    //   ), silence: true
-    // );    
+    );  
 
     sleep(1);
-
     $this->headerTerminal();
   }
 
@@ -76,7 +66,7 @@ extends EventHandler
       ->text( "DevTools v1.0.0 - " )
       ->yellow( "Browser Reloader" )->line()
       ->text( " - Local:" )->spc()
-      ->green( "http://localhost:{$this->watchEvents->devTools->httpServerPort}" )
+      ->green( "http://localhost:{$this->watchEvents->serverJson->httpServerPort}" )
       ->line()
       ->line()
       ->cursorHide();
@@ -86,7 +76,7 @@ extends EventHandler
     DispatchType $dispatchType,
     string|null $file = null
   ): void {
-    $handlerPort = $this->watchEvents->devTools->webSocketPort;
+    $handlerPort = $this->watchEvents->serverJson->webSocketPort;
     $handler = @socket_create(
       AF_INET, SOCK_STREAM, SOL_TCP
     );

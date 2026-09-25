@@ -2,7 +2,6 @@
 
 namespace Websyspro\DevTools;
 
-use Websyspro\DevTools\Interfaces\DevTools;
 use Websyspro\DevTools\Interfaces\EventHandler;
 use Websyspro\DevTools\Enums\DispatchType;
 use RecursiveDirectoryIterator;
@@ -21,7 +20,7 @@ class WatchEvents
   private array $excludePatterns = [];
   private array $filesPrevious = [];
   private array $filesCurrents = [];
-  public DevTools $devTools;
+  public object $serverJson;
 
   public function __construct(
   ){
@@ -31,21 +30,27 @@ class WatchEvents
   private function configDefault(
   ): void {
     if( defined( "BASE_DIR" )){
-      $devTools = sprintf(
-        "%s\dev-tools.php", BASE_DIR
+      $serverJson = sprintf(
+        "%s\server.json", BASE_DIR
       );
 
-      if( file_exists( $devTools )){
-        $this->devTools = require $devTools;
+      if( file_exists( $serverJson )){
+        $this->serverJson = json_decode(
+          file_get_contents( $serverJson )
+        );
 
-        foreach( $this->devTools->includes as $include ){
-          $this->registerDirectory(
-            $include === "/" ? BASE_DIR : $include
-          );
+        if( isset( $this->serverJson->includes )){
+          foreach( $this->serverJson->includes as $include ){
+            $this->registerDirectory(
+              $include === "/" ? BASE_DIR : $include
+            );
+          }
         }
 
-        foreach( $this->devTools->excludes as $exclude ){
-          $this->excludePattern( $exclude );
+        if( isset( $this->serverJson->excludes )){
+          foreach( $this->serverJson->excludes as $exclude ){
+            $this->excludePattern( $exclude );
+          }
         }
       }
     }

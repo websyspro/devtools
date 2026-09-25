@@ -43,7 +43,7 @@ extends EventHandler
     $this->printHeader();
 
     $cmd = sprintf( "%s %s", 
-      PHP_BINARY, $this->watchEvents->devTools->scriptName
+      PHP_BINARY, $this->watchEvents->serverJson->scriptName
     );
 
     $descriptors = [

@@ -2,7 +2,6 @@
 
 namespace Websyspro\DevTools\Middlewares;
 
-use Throwable;
 use Websyspro\DevTools\Objects\RequestHandler;
 use Websyspro\DevTools\Responses\NotFound;
 use Websyspro\DevTools\Responses\Error;
@@ -10,6 +9,7 @@ use Websyspro\DevTools\Enums\FileExist;
 use Websyspro\Utils\Collection;
 use function defined;
 use function sprintf;
+use Throwable;
 
 class HttpServerRouter
 {

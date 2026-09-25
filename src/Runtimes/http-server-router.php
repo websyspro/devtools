@@ -20,21 +20,21 @@ defined( "BASE_DIR" ) || define(
 require_once BASE_DIR . "vendor/autoload.php";
 use Websyspro\DevTools\Middlewares\HttpServerRouter;
 use Websyspro\DevTools\Objects\RequestHandler;
-use Websyspro\DevTools\Interfaces\DevTools;
+
+$serverJson = json_decode(
+  file_get_contents( sprintf(
+    "%s\server.json", BASE_DIR
+  ))
+);
 
 /**
- * Load devTools
+ * Validação serverJson
  */
-$devTools = require_once BASE_DIR . "dev-tools.php";
-
-/**
- * Validação devTools
- */
-if( $devTools instanceof DevTools ){
+if( is_object( $serverJson )){
   $httpServerRouter = new HttpServerRouter(
     directorys: [ 
-      ...[ $devTools->documentRoot ],
-      ...$devTools->includes
+      ...[ $serverJson->documentRoot ],
+      ...$serverJson->includes
     ], friendlyUrl: true 
   );
 
@@ -61,5 +61,5 @@ if( $devTools instanceof DevTools ){
     $httpServerRouter->notFound();
   }
 } else {
-  echo "not devTools";
+  echo "not server config";
 }

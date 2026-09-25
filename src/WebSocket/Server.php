@@ -2,7 +2,6 @@
 
 namespace Websyspro\DevTools\WebSocket;
 
-use Websyspro\DevTools\Interfaces\DevTools;
 use RuntimeException;
 use Socket;
 
@@ -16,7 +15,7 @@ class Server
 {
   private array $clients = [];
   private Socket $handler;
-  private DevTools $devTools;
+  public object $serverJson;
 
   public function __construct(
   ){
@@ -26,14 +25,16 @@ class Server
   private function configDefault(
   ): void {
     if( defined( "BASE_DIR" )){
-      $devTools = sprintf(
-        "%sdev-tools.php", BASE_DIR
+      $serverJson = sprintf(
+        "%s\server.json", BASE_DIR
       );
 
-      if( file_exists( $devTools )){
-        $this->devTools = require $devTools;
+      if( file_exists( $serverJson )){
+        $this->serverJson = json_decode(
+          file_get_contents( $serverJson )
+        );
       }
-    }
+    }    
   }  
 
   public function listen(
@@ -55,8 +56,8 @@ class Server
 
     $handlerBind = socket_bind(
       $this->handler, 
-      $this->devTools->webSocketHost, 
-      $this->devTools->webSocketPort
+      $this->serverJson->webSocketHost, 
+      $this->serverJson->webSocketPort
     );
 
     if( $handlerBind === false ){
